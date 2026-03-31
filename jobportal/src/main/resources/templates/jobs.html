@@ -1,0 +1,5 @@
+<div th:each="job : ${jobs}" xmlns:th="http://www.thymeleaf.org">
+    <h3 th:text="${job.title}"></h3>
+    <p th:text="${job.description}"></p>
+    <button>Apply</button>
+</div>
