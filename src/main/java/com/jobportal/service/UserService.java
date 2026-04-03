@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import java.io.IOException;
 import java.security.cert.Extension;
 import java.util.List;
@@ -15,15 +16,18 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
 
     @Autowired
     private UserRepository userRepository;
 
 
-    public Users saveUser(Users user) {
+ /*   public Users saveUser(Users user) {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword())); // direct
         return userRepository.save(user);
-    }
+    }  */
 
 
     public List<Users> getAllUsers() {
@@ -31,20 +35,29 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        public UserDetails loadUserByUsername (String email) throws UsernameNotFoundException {
 
-        Users user = userRepository.findByEmail(email);
+            Users user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(user.getEmail())
+                    .password(user.getPassword())
+                    .roles(user.getRole()) // IMPORTANT
+                    .build();
         }
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-        );
-
+    public void saveUser(Users user) {
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Password is null - check form binding");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
 
     }
-}
+
+
+
+
+

@@ -8,7 +8,7 @@ import java.io.OutputStream;
 @Table(name = "users")
 public class Users {
 
-    @Column(name = "role")
+    @Column(nullable = false)
     private String role;
 
     @Id
@@ -40,6 +40,7 @@ public class Users {
     }
 
     public void setPassword(String password) {
+
         this.password = password;
     }
 
@@ -50,4 +51,6 @@ public class Users {
     public void setRole(String role) {
         this.role = role;
     }
+
+
 }

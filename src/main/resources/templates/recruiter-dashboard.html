@@ -1,43 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Recruiter Dashboard</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #f4f6f9;
-        }
-
-        .header {
-            background: #28a745;
-            color: white;
-            padding: 15px;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
-<div class="header">
-    <h2>Recruiter Dashboard</h2>
-</div>
+<body class="container mt-5">
 
-<div class="container">
-    <div class="card">
-        <h3>Post a Job</h3>
-        <p>Feature coming next...</p>
+<h1 class="text-center text-primary mb-4">Recruiter Dashboard</h1>
+
+<div th:each="job : ${jobs}" class="card mb-4 p-3 shadow">
+
+    <h4 th:text="${job.title}"></h4>
+    <p th:text="${job.description}"></p>
+
+    <p><strong>Applicants:</strong></p>
+
+    <div th:if="${applicationsMap[job.id] == null or #lists.isEmpty(applicationsMap[job.id])}">
+        <p>No applicants yet</p>
+    </div>
+
+    <div th:each="app : ${applicationsMap[job.id]}">
+
+        <p>
+            <strong>Email:</strong>
+            <span th:text="${app.userEmail}"></span>
+        </p>
+
+        <a th:href="@{/resume/{id}(id=${app.id})}"
+           class="btn btn-sm btn-outline-primary mb-2">
+            Download Resume
+        </a>
+
     </div>
 </div>
-
 </body>
 </html>

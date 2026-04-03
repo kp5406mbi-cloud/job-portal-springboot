@@ -8,16 +8,17 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
-public class SecurityConfig {
+public class SecurityConfig{
 
-    @Autowired
-    private UserService userService;
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserService userService,
+                                                         BCryptPasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userService);
         provider.setPasswordEncoder(passwordEncoder());
@@ -26,7 +27,8 @@ public class SecurityConfig {
 
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public  BCryptPasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
@@ -39,45 +41,45 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())
-                .authenticationProvider(authenticationProvider())
-
+           //     .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/", "/add").permitAll()
-                        .requestMatchers("/dashboard").authenticated()
-                        .requestMatchers("/user/**").hasRole("USER")
+
+                        // PUBLIC
+                        .requestMatchers("/login", "/register", "/css/**").permitAll()
+
+                        // ROLE BASED
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
+                        .requestMatchers("/jobs/**").hasRole("USER")
+
+                        // FINAL RULE (ONLY ONCE)
                         .anyRequest().authenticated()
                 )
-
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/dashboard", true)
-
-                  /*     .successHandler((request, response, authentication) -> {
-
-                            var authorities = authentication.getAuthorities();
-
-                            if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_RECRUITER"))) {
-                                response.sendRedirect("/recruiter/dashboard");
-                            } else {
-                                response.sendRedirect("/user/dashboard");
-                            }
-
-                        })   */
-                        .permitAll())
-                .exceptionHandling(e -> e
-                        .accessDeniedPage("/login")
+                        .permitAll()
                 )
-
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
 
-
         return http.build();
+    }
+
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return (request, response, authentication) -> {
+
+            var authorities = authentication.getAuthorities();
+
+            if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_RECRUITER"))) {
+                response.sendRedirect("/recruiter/dashboard");
+            } else {
+                response.sendRedirect("/jobs");
+            }
+        };
     }
 
 }

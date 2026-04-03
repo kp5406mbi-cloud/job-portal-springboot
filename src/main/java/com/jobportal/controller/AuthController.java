@@ -4,24 +4,38 @@ import com.jobportal.dto.UserDTO;
 import com.jobportal.entity.Users;
 import com.jobportal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 public class AuthController {
 
     @Autowired
     private UserService userService;
+    private String role;
 
     @PostMapping("/register")
-    public String register(@RequestBody UserDTO dto) {
+    public String register(@RequestParam String email,
+                           @RequestParam String password,
+                           @RequestParam String role) {
+
+        System.out.println("EMAIL: " + email);
+        System.out.println("PASSWORD: " + password);
+        System.out.println("ROLE: " + role);
 
         Users user = new Users();
-        user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
-        user.setRole("USER");
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(role);
 
         userService.saveUser(user);
 
-        return "User registered successfully!";
+        return "redirect:/login";
+    }
+
+
+    @GetMapping("/register")
+    public String showRegisterPage() {
+        return "register";
     }
 }

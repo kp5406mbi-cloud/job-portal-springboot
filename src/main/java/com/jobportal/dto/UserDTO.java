@@ -5,6 +5,7 @@ public class UserDTO {
     private Long userId;
     private String email;
     private String password;
+    private String role;
 
     public UserDTO(Long userId, String email) {
         this.userId = userId;
@@ -22,5 +23,9 @@ public class UserDTO {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getRole() {
+        return role;
     }
 }
