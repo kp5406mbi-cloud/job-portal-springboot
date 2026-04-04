@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
+@RequestMapping("/recruiter")
 public class JobController {
 
     @Autowired
@@ -48,8 +50,10 @@ public class JobController {
     }
 
     @PostMapping("/post")
-    public String saveJob(@ModelAttribute Job job) {
+    public String saveJob(@ModelAttribute Job job, Principal principal) {
         jobService.saveJob(job);
+        job.setRecruiterEmail(principal.getName());
+
         return "redirect:/recruiter/dashboard";
     }
 }

@@ -37,4 +37,10 @@ public class JobService {
 
         applicationRepository.save(application);
     }
+
+    public List<Job> getJobsByRecruiter(String email) {
+
+        return jobRepository.findByRecruiterEmail(email);
+
+    }
 }

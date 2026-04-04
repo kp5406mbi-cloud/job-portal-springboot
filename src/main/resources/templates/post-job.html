@@ -1,5 +1,11 @@
-<form th:action="@{/recruiter/post}" method="post" xmlns:th="http://www.thymeleaf.org">
-    <input type="text" name="title" placeholder="Job Title"/>
-    <textarea name="description" placeholder="Description"></textarea>
+<form th:action="@{/post}" method="post" th:object="${job}" xmlns:th="http://www.thymeleaf.org">
+
+    <input type="text" th:field="*{title}" placeholder="Job Title"/>
+
+    <textarea th:field="*{description}" placeholder="Description"></textarea>
+
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
     <button type="submit">Post Job</button>
+
 </form>

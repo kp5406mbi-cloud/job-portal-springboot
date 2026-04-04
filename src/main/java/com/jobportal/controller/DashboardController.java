@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,11 @@ public class DashboardController<auth> {
     }
 
     @GetMapping("/recruiter/dashboard")
-    public String recruiterDashboard(Model model, Authentication auth) {
+    public String recruiterDashboard(Model model, Principal principal) {
 
-        List<Job> jobs = jobService.getAllJobs();
+        String email = principal.getName();
+
+        List<Job> jobs = jobService.getJobsByRecruiter(email);
         model.addAttribute("jobs", jobs);
 
 
@@ -62,5 +65,11 @@ public class DashboardController<auth> {
             return "redirect:/recruiter/dashboard";
         }
         return "redirect:/user/dashboard";
+    }
+
+    @GetMapping("/clear-jobs")
+    public String clearJobs() {
+        jobRepository.deleteAll();
+        return "redirect:/recruiter/dashboard";
     }
 }

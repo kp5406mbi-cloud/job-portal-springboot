@@ -13,9 +13,10 @@ public class Job {
     private String title;
     private String description;
     private String location;
+    private String recruiterEmail;
 
     public Job() {
-        this.location = location;
+
     }
 
     public Long getId() {
@@ -38,7 +39,15 @@ public class Job {
         this.description = description;
     }
 
-    public void setId(Long Id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRecruiterEmail() {
+        return recruiterEmail;
+    }
+
+    public void setRecruiterEmail(String recruiterEmail) {
+        this.recruiterEmail = recruiterEmail;
     }
 }
