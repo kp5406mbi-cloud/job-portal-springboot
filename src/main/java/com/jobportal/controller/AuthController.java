@@ -29,7 +29,7 @@ public class AuthController {
 
         Users user = new Users();
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
 
         userService.saveUser(user);
