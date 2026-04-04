@@ -4,11 +4,15 @@ import com.jobportal.dto.UserDTO;
 import com.jobportal.entity.Users;
 import com.jobportal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AuthController {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserService userService;
@@ -25,7 +29,7 @@ public class AuthController {
 
         Users user = new Users();
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(role);
 
         userService.saveUser(user);
