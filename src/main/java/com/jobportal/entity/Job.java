@@ -47,7 +47,8 @@ public class Job {
         return recruiterEmail;
     }
 
-    public void setRecruiterEmail(String recruiterEmail) {
-        this.recruiterEmail = recruiterEmail;
+    public void setRecruiterEmail(String email) {
+
+        this.recruiterEmail = email;
     }
 }
