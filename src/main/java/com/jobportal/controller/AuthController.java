@@ -42,4 +42,10 @@ public class AuthController {
     public String showRegisterPage() {
         return "register";
     }
+
+    @GetMapping("/clear-users")
+    public String clearUsers() {
+        userService.deleteAllUsers();
+        return "redirect:/login";
+    }
 }
