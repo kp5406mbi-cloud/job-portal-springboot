@@ -9,6 +9,14 @@
 
 <h1 class="text-center text-primary mb-4">Recruiter Dashboard</h1>
 
+<div th:if="${#lists.isEmpty(jobs)}" class="text-center mt-4">
+    <p class="text-muted">You haven’t posted any jobs yet.</p>
+</div>
+
+<a href="/recruiter/post-job" class="btn btn-primary mt-3">
+    Post Your First Job
+</a>
+
 <div th:each="job : ${jobs}" class="card mb-4 p-3 shadow">
 
     <h4 th:text="${job.title}"></h4>
