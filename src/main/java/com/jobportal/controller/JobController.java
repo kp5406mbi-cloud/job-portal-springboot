@@ -40,7 +40,7 @@ public class JobController {
         return "jobs";
     }
 
-    @GetMapping("/post")
+   /* @GetMapping("/post")
     public String showForm(Model model) {
         model.addAttribute("job", new Job());
         return "post-job";
@@ -51,6 +51,19 @@ public class JobController {
         jobService.saveJob(job);
         job.setRecruiterEmail(principal.getName());
 
+        return "redirect:/recruiter/dashboard";
+    }  */
+
+    @GetMapping("/post-job")
+    public String showForm(Model model) {
+        model.addAttribute("job", new Job());
+        return "post-job";
+    }
+
+    @PostMapping("/post-job")
+    public String saveJob(@ModelAttribute Job job, Principal principal) {
+        job.setRecruiterEmail(principal.getName());
+        jobService.saveJob(job);
         return "redirect:/recruiter/dashboard";
     }
 
