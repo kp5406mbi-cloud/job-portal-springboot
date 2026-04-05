@@ -13,6 +13,8 @@ public class Job {
     private String title;
     private String description;
     private String location;
+
+
     private String recruiterEmail;
 
     public Job() {

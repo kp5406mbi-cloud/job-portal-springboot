@@ -66,5 +66,9 @@ public class ApplicationService {
                 .map(app -> app.getJob().getId())
                 .toList();
     }
+
+    public List<String> getJobsByUser(String email) {
+        return applicationRepository.findJobTitlesByUserEmail(email);
+    }
 }
 
