@@ -56,7 +56,7 @@ public class ApplicationController {
             redirectAttributes.addFlashAttribute("error", "Upload failed!");
         }
 
-        return "redirect:/jobs";
+        return "redirect:/user/jobs";
     }
 
     @GetMapping("/resume/{id}")
@@ -87,6 +87,30 @@ public class ApplicationController {
                         "attachment; filename=\"" + path.getFileName() + "\"")
                 .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
                 .body(resource);
+    }
+
+    @PostMapping("/recruiter/application/{id}/accept")
+    public String acceptApplication(@PathVariable Long id) {
+
+        Application app = applicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+
+        app.setStatus("ACCEPTED");
+        applicationRepository.save(app);
+
+        return "redirect:/recruiter/applicants/" + app.getJob().getId();
+    }
+
+    @PostMapping("/recruiter/application/{id}/reject")
+    public String rejectApplication(@PathVariable Long id) {
+
+        Application app = applicationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+
+        app.setStatus("REJECTED");
+        applicationRepository.save(app);
+
+        return "redirect:/recruiter/applicants/" + app.getJob().getId();
     }
 
 

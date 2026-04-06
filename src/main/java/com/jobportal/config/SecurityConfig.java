@@ -16,6 +16,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 public class SecurityConfig{
 
 
+
+
     @Bean
     public AuthenticationProvider authenticationProvider(UserService userService,
                                                          BCryptPasswordEncoder passwordEncoder) {
@@ -38,25 +40,31 @@ public class SecurityConfig{
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
 
         http
+                .authenticationProvider(authenticationProvider)
+
            //     .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
+                        
+
 
                         // PUBLIC
                         .requestMatchers("/login", "/register", "/css/**").permitAll()
 
                         // ROLE BASED
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
-                        .requestMatchers("/jobs/**").hasRole("USER")
+                        .requestMatchers("/jobs", "/jobs/**").hasRole("USER")
+                        .requestMatchers("/apply/**").hasRole("USER")
 
                         // FINAL RULE (ONLY ONCE)
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard", true)
+                        .successHandler(successHandler())
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -77,7 +85,7 @@ public class SecurityConfig{
             if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_RECRUITER"))) {
                 response.sendRedirect("/recruiter/dashboard");
             } else {
-                response.sendRedirect("/jobs");
+                response.sendRedirect("/user/jobs");
             }
         };
     }

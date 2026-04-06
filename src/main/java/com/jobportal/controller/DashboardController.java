@@ -55,7 +55,7 @@ public class DashboardController<auth> {
         model.addAttribute("jobs", jobs);
         model.addAttribute("applicationsMap", applicationsMap);
 
-        return "recruiter-dashboard";
+        return "redirect:/recruiter/jobs";
     }
 
     @GetMapping("/dashboard")

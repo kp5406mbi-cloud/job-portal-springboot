@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -52,6 +53,7 @@ public class ApplicationService {
         application.setJob(job);
         application.setUserEmail(userEmail);
         application.setResumePath(fileName);  // ✅ SAVE FILE NAME
+        application.setAppliedDate(LocalDateTime.now());
 
         applicationRepository.save(application);  // ✅ SAVE TO DB
 
@@ -69,6 +71,16 @@ public class ApplicationService {
 
     public List<String> getJobsByUser(String email) {
         return applicationRepository.findJobTitlesByUserEmail(email);
+    }
+
+    public List<Application> getApplicationsByJobId(Long jobId) {
+        return applicationRepository.findByJobId(jobId);
+    }
+
+    public void updateStatus(Long id, String status) {
+        Application app = applicationRepository.findById(id).orElseThrow();
+        app.setStatus(status);
+        applicationRepository.save(app);
     }
 }
 

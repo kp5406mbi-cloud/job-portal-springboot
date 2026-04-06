@@ -13,8 +13,9 @@
     <p class="text-muted">You haven’t posted any jobs yet.</p>
 </div>
 
-<a href="/recruiter/post-job" class="btn btn-primary mt-3">
-    Post Your First Job
+
+<a th:href="@{/recruiter/post}" class="btn btn-primary">
+    <span th:text="${#lists.isEmpty(jobs) ? 'Post Your First Job' : 'Post Another Job'}"></span>
 </a>
 
 <div th:each="job : ${jobs}" class="card mb-4 p-3 shadow">

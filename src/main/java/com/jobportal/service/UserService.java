@@ -35,19 +35,24 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-        public UserDetails loadUserByUsername (String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-            Users user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(user.getEmail())
-                    .password(user.getPassword())
-                    .roles(user.getRole()) // IMPORTANT
-                    .build();
-        }
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole()) // IMPORTANT
+                .build();
+    }
 
     public void saveUser(Users user) {
+
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+
         if (user.getPassword() == null) {
             throw new RuntimeException("Password is null - check form binding");
         }
@@ -55,9 +60,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void deleteAllUsers() {
-        userRepository.deleteAll();
-    }
+
 }
 
 

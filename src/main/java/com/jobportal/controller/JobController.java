@@ -17,58 +17,85 @@ import java.util.List;
 public class JobController {
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private JobService jobService;
 
+    // ✅ View recruiter jobs
     @GetMapping("/jobs")
-    public String showJobs(Model model, Authentication auth) {
+    public String showJobs(Model model, Principal principal) {
 
-        List<Job> jobs = jobService.getAllJobs();
-
-        System.out.println("JOBS SIZE: " + jobs.size());
-
-
-
-        List<Long> appliedJobIds = applicationService.getAppliedJobIds(auth.getName());
-
-        System.out.println("Applied Job IDs: " + appliedJobIds);
-
+        List<Job> jobs = jobService.getJobsByRecruiter(principal.getName());
         model.addAttribute("jobs", jobs);
-        model.addAttribute("appliedJobIds", appliedJobIds);
-        return "jobs";
+
+        return "recruiter-jobs"; // separate view
     }
 
-   /* @GetMapping("/post")
+    // ✅ Show form
+    @GetMapping("/post")
     public String showForm(Model model) {
         model.addAttribute("job", new Job());
         return "post-job";
     }
 
+    // ✅ Save job
     @PostMapping("/post")
     public String saveJob(@ModelAttribute Job job, Principal principal) {
-        jobService.saveJob(job);
-        job.setRecruiterEmail(principal.getName());
 
-        return "redirect:/recruiter/dashboard";
-    }  */
-
-    @GetMapping("/post-job")
-    public String showForm(Model model) {
-        model.addAttribute("job", new Job());
-        return "post-job";
-    }
-
-    @PostMapping("/post-job")
-    public String saveJob(@ModelAttribute Job job, Principal principal) {
+        // FIXED ORDER ✅
         job.setRecruiterEmail(principal.getName());
         jobService.saveJob(job);
-        return "redirect:/recruiter/dashboard";
+
+        return "redirect:/recruiter/jobs";
     }
 
-    @GetMapping("/user/jobs")
-    public List<String> getUserJobs(@RequestParam String email) {
-        return applicationService.getJobsByUser(email);
+    @PostMapping("/delete/{id}")
+    public String deleteJob(@PathVariable Long id) {
+        jobService.deleteJob(id);
+        return "redirect:/recruiter/jobs";
     }
+
+    @GetMapping("/edit/{id}")
+    public String editJobForm(@PathVariable Long id, Model model) {
+
+        Job job = jobService.getJobById(id);
+        model.addAttribute("job", job);
+
+        return "edit-job";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateJob(@PathVariable Long id,
+                            @ModelAttribute Job job,
+                            Principal principal) {
+
+        job.setId(id); // VERY IMPORTANT
+        job.setRecruiterEmail(principal.getName()); // keep ownership
+
+        jobService.saveJob(job);
+
+        return "redirect:/recruiter/jobs";
+    }
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @GetMapping("/applicants/{id}")
+    public String viewApplicants(@PathVariable Long id, Model model) {
+
+        var applications = applicationService.getApplicationsByJobId(id);
+
+        model.addAttribute("applications", applications);
+
+        return "applicants"; // create this HTML
+    }
+
+    @PostMapping("/application/status/{id}")
+    public String updateStatus(@PathVariable Long id,
+                               @RequestParam String status) {
+
+        applicationService.updateStatus(id, status);
+
+        return "redirect:/recruiter/jobs";
+    }
+
+
 }

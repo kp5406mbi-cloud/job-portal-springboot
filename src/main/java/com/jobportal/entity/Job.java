@@ -10,6 +10,9 @@ public class Job {
     @Column(name = "job_id")
     private Long id;
 
+    @Column(nullable = true)
+    private Long salary;
+
     private String title;
     private String description;
     private String location;
@@ -19,6 +22,15 @@ public class Job {
 
     public Job() {
 
+        this.salary = salary;
+    }
+
+    public Long getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Long salary) {
+        this.salary = salary;
     }
 
     public Long getId() {
@@ -52,5 +64,13 @@ public class Job {
     public void setRecruiterEmail(String email) {
 
         this.recruiterEmail = email;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

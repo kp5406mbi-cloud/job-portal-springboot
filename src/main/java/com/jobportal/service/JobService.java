@@ -17,7 +17,12 @@ public class JobService {
 
 
     @Autowired
-    private JobRepository jobRepository;
+    private final JobRepository jobRepository;
+
+    public JobService(JobRepository jobRepository, ApplicationRepository applicationRepository) {
+        this.jobRepository = jobRepository;
+        this.applicationRepository = applicationRepository;
+    }
 
     public void saveJob(Job job) {
         jobRepository.save(job);
@@ -42,5 +47,15 @@ public class JobService {
 
         return jobRepository.findByRecruiterEmail(email);
 
+    }
+
+    public void deleteJob(Long id) {
+
+        jobRepository.deleteById(id);
+    }
+
+    public Job getJobById(Long id) {
+        return jobRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
     }
 }
