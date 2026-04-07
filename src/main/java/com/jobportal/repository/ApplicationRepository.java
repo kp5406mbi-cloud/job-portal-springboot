@@ -2,6 +2,7 @@ package com.jobportal.repository;
 
 import com.jobportal.entity.Application;
 import com.jobportal.entity.Job;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     @Query("SELECT j.title FROM Application a JOIN a.job j WHERE a.userEmail = :email")
     List<String> findJobTitlesByUserEmail(@Param("email") String email);
+
+
 }

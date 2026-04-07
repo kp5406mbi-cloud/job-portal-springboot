@@ -21,12 +21,15 @@ public class JobController {
 
     // ✅ View recruiter jobs
     @GetMapping("/jobs")
-    public String showJobs(Model model, Principal principal) {
+    public String viewRecruiterJobs(Model model, Principal principal) {
 
-        List<Job> jobs = jobService.getJobsByRecruiter(principal.getName());
+        String username = principal.getName();
+        model.addAttribute("username", username);
+
+        List<Job> jobs = jobService.getJobsByRecruiter(username);
         model.addAttribute("jobs", jobs);
 
-        return "recruiter-jobs"; // separate view
+        return "recruiter-jobs";
     }
 
     // ✅ Show form
@@ -70,7 +73,7 @@ public class JobController {
         job.setId(id); // VERY IMPORTANT
         job.setRecruiterEmail(principal.getName()); // keep ownership
 
-        jobService.saveJob(job);
+        jobService.updateJob(id, job);
 
         return "redirect:/recruiter/jobs";
     }
@@ -96,6 +99,5 @@ public class JobController {
 
         return "redirect:/recruiter/jobs";
     }
-
 
 }

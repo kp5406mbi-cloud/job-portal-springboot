@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +25,12 @@ public class UserJobController {
     private JobService jobService;
 
     @GetMapping("/jobs")
-    public String userJobs(Model model, Authentication auth) {
+    public String userJobs(Model model, Authentication auth, Principal principal) {
 
         List<Job> jobs = jobService.getAllJobs();
         model.addAttribute("jobs", jobs);
+
+        model.addAttribute("username", principal.getName());
 
         // Handle logged-in users safely
         if (auth != null && auth.isAuthenticated()) {

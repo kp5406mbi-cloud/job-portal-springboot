@@ -1,6 +1,10 @@
 package com.jobportal.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Job {
@@ -13,16 +17,31 @@ public class Job {
     @Column(nullable = true)
     private Long salary;
 
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Application> applications = new ArrayList<>();
+
+    private String company;
+
+
+
+
+
+
+
+
+
+
     private String title;
     private String description;
     private String location;
+
+
 
 
     private String recruiterEmail;
 
     public Job() {
 
-        this.salary = salary;
     }
 
     public Long getSalary() {
@@ -73,4 +92,29 @@ public class Job {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public Job(String company) {
+        this.company = company;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public void addApplication(Application application) {
+        applications.add(application);
+        application.setJob(this);
+    }
+
+    public void removeApplication(Application application) {
+        applications.remove(application);
+        application.setJob(null);
+    }
+
+
+
 }
