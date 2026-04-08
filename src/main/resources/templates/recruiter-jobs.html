@@ -7,52 +7,92 @@
 
 <body class="container mt-5">
 
+<!-- HEADER -->
 <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <!-- LEFT: Title -->
     <h1 class="text-dark m-0">Your Posted Jobs</h1>
 
-    <!-- RIGHT: User + Logout -->
     <div class="d-flex align-items-center gap-3">
-
         <span class="text-muted">
             Logged in as <b th:text="${username}"></b>
         </span>
 
         <form th:action="@{/logout}" method="post">
-            <input type="hidden"
-                   th:name="${_csrf.parameterName}"
-                   th:value="${_csrf.token}" />
+
             <button class="btn btn-outline-danger btn-sm">Logout</button>
         </form>
-
     </div>
 
 </div>
 
-<!-- ACTION BUTTON (separate row) -->
-<div class="mb-4">
+<!-- SEARCH + SORT -->
+<form method="get" action="/recruiter/jobs"
+      class="mb-4 d-flex flex-wrap gap-2 align-items-center">
+
+    <!-- Search -->
+    <input class="form-control" style="width:200px;" type="text" name="company"
+           placeholder="Search by company"
+           th:value="${company}" />
+
+    <input class="form-control" style="width:200px;" type="text" name="location"
+           placeholder="Filter by location"
+           th:value="${location}" />
+
+    <!-- Sort -->
+    <select name="sortBy" class="form-select w-auto">
+        <option value="id" th:selected="${sortBy == 'id'}">Newest</option>
+        <option value="salary" th:selected="${sortBy == 'salary'}">Salary</option>
+    </select>
+
+    <select name="direction" class="form-select w-auto">
+        <option value="desc" th:selected="${direction == 'desc'}">Descending</option>
+        <option value="asc" th:selected="${direction == 'asc'}">Ascending</option>
+    </select>
+
+    <!-- Buttons -->
+    <button class="btn btn-primary">Apply</button>
+
+    <a href="/recruiter/jobs" class="btn btn-outline-secondary">
+        Clear
+    </a>
+
+</form>
+
+<!-- POST BUTTON -->
+<div class="mb-4"
+     th:if="${jobs != null and !#lists.isEmpty(jobs)}">
 
     <a th:href="@{/recruiter/post}" class="btn btn-primary">
-
-        <span th:text="${jobs == null or #lists.isEmpty(jobs)
-                        ? 'Post Your First Job'
-                        : 'Post Another Job'}">
-        </span>
-
+        Post Another Job
     </a>
 
 </div>
 
-<div th:if="${jobs == null or #lists.isEmpty(jobs)}">
-    <p class="text-center text-muted">No jobs posted yet.</p>
+<!-- NO JOBS -->
+<div th:if="${jobs == null or #lists.isEmpty(jobs)}"
+     class="d-flex justify-content-center align-items-center text-center w-100 mt-5"
+     style="min-height:60vh;">
+
+    <div>
+        <p class="text-muted fs-5 mb-3">
+            You haven't posted any jobs yet
+        </p>
+
+        <a th:href="@{/recruiter/post}" class="btn btn-primary">
+            Post Your First Job
+        </a>
+    </div>
+
 </div>
 
+<!-- JOB LIST -->
 <div th:each="job : ${jobs}" class="card mb-3 p-3 shadow-sm">
 
     <h6 class="text-muted mb-1" th:text="${job.company}"></h6>
     <h4 th:text="${job.title}"></h4>
     <p th:text="${job.description}"></p>
+
+    <!-- Salary -->
     <p class="text-success fw-semibold" th:if="${job.salary != null}">
         Salary: ₹<span th:text="${job.salary / 100000}"></span> LPA
         (<span th:text="${#numbers.formatInteger(job.salary, 3, 'COMMA')}"></span>)
@@ -62,9 +102,13 @@
         Salary: Not disclosed
     </p>
 
-    <p class="text-muted">Location: <span th:text="${job.location}"></span></p>
+    <p class="text-muted">
+        Location: <span th:text="${job.location}"></span>
+    </p>
 
+    <!-- ACTION BUTTONS -->
     <div class="mt-3">
+
         <a th:href="@{/recruiter/applicants/{id}(id=${job.id})}"
            class="btn btn-outline-primary btn-sm me-2">
             View Applicants
@@ -76,30 +120,52 @@
         </a>
 
         <form th:action="@{/recruiter/delete/{id}(id=${job.id})}"
-              method="post" style="display:inline;">
+              method="post"
+              style="display:inline;">
 
-            <input type="hidden"
-                   th:name="${_csrf.parameterName}"
-                   th:value="${_csrf.token}" />
 
-            <form th:action="@{/recruiter/delete/{id}(id=${job.id})}"
-                  method="post"
-                  style="display:inline;">
 
-                <input type="hidden"
-                       th:name="${_csrf.parameterName}"
-                       th:value="${_csrf.token}" />
-
-                <button type="submit" class="btn btn-danger btn-sm">
-                    Delete
-                </button>
-
-            </form>
+            <button type="submit" class="btn btn-danger btn-sm">
+                Delete
+            </button>
         </form>
+
     </div>
 
+</div>
 
+<!-- PAGINATION -->
+<div class="mt-4 text-center" th:if="${totalPages > 1}">
+    <ul class="pagination justify-content-center">
 
+        <!-- Prev -->
+        <li class="page-item" th:if="${currentPage > 0}">
+            <a class="page-link"
+               th:href="@{/recruiter/jobs(page=${currentPage - 1}, company=${company}, location=${location}, sortBy=${sortBy}, direction=${direction})}">
+                Prev
+            </a>
+        </li>
+
+        <!-- Page numbers -->
+        <li class="page-item"
+            th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+            th:classappend="${i == currentPage} ? 'active'">
+
+            <a class="page-link"
+               th:href="@{/recruiter/jobs(page=${i}, company=${company}, location=${location}, sortBy=${sortBy}, direction=${direction})}"
+               th:text="${i + 1}">
+            </a>
+        </li>
+
+        <!-- Next -->
+        <li class="page-item" th:if="${currentPage < totalPages - 1}">
+            <a class="page-link"
+               th:href="@{/recruiter/jobs(page=${currentPage + 1}, company=${company}, location=${location}, sortBy=${sortBy}, direction=${direction})}">
+                Next
+            </a>
+        </li>
+
+    </ul>
 </div>
 
 </body>

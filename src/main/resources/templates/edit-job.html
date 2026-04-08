@@ -13,20 +13,16 @@
       method="post"
       th:object="${job}">
 
-    <input type="text" th:field="*{title}" class="form-control mb-2" placeholder="Title"/>
+    <input type="text" th:field="*{title}" class="form-control mb-3" placeholder="Title"/>
 
-    <input type="number"
-           th:field="*{salary}"
-           class="form-control mb-2"
-           placeholder="Salary (₹ per year)" />
+    <input type="text" th:field="*{company}" class="form-control mb-3" placeholder="Company Name"/>
 
-    <input type="text" th:field="*{location}" class="form-control mb-2" placeholder="Location"/>
+    <input type="number" th:field="*{salary}" class="form-control mb-3" placeholder="Salary (₹ per year)"/>
 
-    <textarea th:field="*{description}" class="form-control mb-2" placeholder="Description"></textarea>
+    <input type="text" th:field="*{location}" class="form-control mb-3" placeholder="Location"/>
 
-    <input type="hidden"
-           th:name="${_csrf.parameterName}"
-           th:value="${_csrf.token}" />
+    <textarea th:field="*{description}" class="form-control mb-3" placeholder="Description"></textarea>
+
 
     <button class="btn btn-warning">Update Job</button>
 

@@ -4,10 +4,12 @@ import com.jobportal.entity.Job;
 import com.jobportal.service.ApplicationService;
 import com.jobportal.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
 import java.util.List;
@@ -21,13 +23,39 @@ public class JobController {
 
     // ✅ View recruiter jobs
     @GetMapping("/jobs")
-    public String viewRecruiterJobs(Model model, Principal principal) {
+    public String viewRecruiterJobs(Model model,
+                                    Principal principal,
+                                    @RequestParam(defaultValue = "") String company,
+                                    @RequestParam(defaultValue = "") String location,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "5") int size,
+                                    @RequestParam(defaultValue = "id") String sortBy,
+                                    @RequestParam(defaultValue = "asc") String direction) {
 
         String username = principal.getName();
         model.addAttribute("username", username);
 
-        List<Job> jobs = jobService.getJobsByRecruiter(username);
-        model.addAttribute("jobs", jobs);
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        String keyword = (company == null ? "" : company ) + " " +
+                (location == null ? "" : location);
+
+        Page<Job> jobPage = jobService.searchJobsByRecruiter(username, keyword, pageable);
+
+        model.addAttribute("jobs", jobPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", jobPage.getTotalPages());
+
+
+        model.addAttribute("company", company);
+        model.addAttribute("location", location);
+
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("direction", direction);
 
         return "recruiter-jobs";
     }
@@ -46,6 +74,8 @@ public class JobController {
         // FIXED ORDER ✅
         job.setRecruiterEmail(principal.getName());
         jobService.saveJob(job);
+
+        System.out.println("Saved job for: " + job.getRecruiterEmail());
 
         return "redirect:/recruiter/jobs";
     }

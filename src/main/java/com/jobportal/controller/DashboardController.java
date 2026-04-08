@@ -6,11 +6,13 @@ import com.jobportal.repository.ApplicationRepository;
 import com.jobportal.repository.JobRepository;
 import com.jobportal.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import org.springframework.data.domain.Pageable;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.Map;
 
 
 @Controller
-public class DashboardController<auth> {
+public class DashboardController {
 
     @Autowired
     private JobRepository jobRepository;
@@ -31,7 +33,12 @@ public class DashboardController<auth> {
 
     @GetMapping("/user/dashboard")
     public String userDashboard(Model model) {
-        model.addAttribute("jobs", jobService.getAllJobs());
+        Pageable pageable = PageRequest.of(0, 10);
+
+        model.addAttribute("jobs",
+                jobService.getAllJobs(pageable, 0).getContent()
+        );
+
         return "user-dashboard";
     }
 
@@ -41,7 +48,7 @@ public class DashboardController<auth> {
         String email = principal.getName();
 
         List<Job> jobs = jobService.getJobsByRecruiter(email);
-        model.addAttribute("jobs", jobs);
+
 
 
 

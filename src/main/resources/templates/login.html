@@ -16,23 +16,23 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            width: 300px;
+            width: 320px;
             text-align: center;
         }
 
-        input {
+        input, button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
+            box-sizing: border-box;
         }
 
         button {
-            width: 100%;
-            padding: 10px;
             background: #667eea;
             color: white;
             border: none;
             border-radius: 5px;
+            cursor: pointer;
         }
 
         h2 {
@@ -47,23 +47,29 @@
 <body>
 
 <div class="login-box">
+
     <h2>Job Portal Login</h2>
 
-    <form th:action="@{/login}" method="post" autocomplete="off">
-        <input type="email" name="username" placeholder="Email" required />
-        <input type="password" name="password" placeholder="Password" required />
+    <!-- ✅ FIXED FORM -->
+    <form th:action="@{/login}" method="post">
+
+        <input type="email" name="username" placeholder="Email">
+
+        <input type="password" name="password" placeholder="Password">
 
         <button type="submit">Login</button>
+
     </form>
-
-
 
     <p class="error" th:if="${param.error != null}">
         Invalid credentials
     </p>
-    <p th:if="${param.logout != null}">Logged out successfully</p>
 
-    <div class="text-center mt-3">
+    <p th:if="${param.logout != null}">
+        Logged out successfully
+    </p>
+
+    <div style="margin-top: 10px;">
         <small>
             Don't have an account?
             <a href="/register">Register here</a>

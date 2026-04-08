@@ -23,7 +23,7 @@ public class SecurityConfig{
                                                          BCryptPasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
@@ -45,13 +45,14 @@ public class SecurityConfig{
         http
                 .authenticationProvider(authenticationProvider)
 
-           //     .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
 
                         
 
 
                         // PUBLIC
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/login", "/register", "/css/**").permitAll()
 
                         // ROLE BASED
@@ -61,6 +62,17 @@ public class SecurityConfig{
 
                         // FINAL RULE (ONLY ONCE)
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            if (request.getRequestURI().startsWith("/api")) {
+                                response.setStatus(401);
+                                response.setContentType("application/json");
+                                response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                            } else {
+                                response.sendRedirect("/login");
+                            }
+                        })
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

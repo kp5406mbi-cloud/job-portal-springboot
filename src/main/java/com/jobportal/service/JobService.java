@@ -1,78 +1,33 @@
 package com.jobportal.service;
 
-import com.jobportal.entity.Application;
 import com.jobportal.entity.Job;
-import com.jobportal.repository.ApplicationRepository;
-import com.jobportal.repository.JobRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-@Service
-public class JobService {
+public interface JobService {
 
-    @Autowired
-    public ApplicationRepository applicationRepository;
+    // CRUD
+    Job saveJob(Job job);
+    Job getJobById(Long id);
+    Job updateJob(Long id, Job job);
+    void deleteJob(Long id);
 
+    // Recruiter jobs
+    List<Job> getJobsByRecruiter(String email);
 
-    @Autowired
-    private final JobRepository jobRepository;
-
-    public JobService(JobRepository jobRepository, ApplicationRepository applicationRepository) {
-        this.jobRepository = jobRepository;
-        this.applicationRepository = applicationRepository;
-    }
-
-    public void saveJob(Job job) {
-        jobRepository.save(job);
-    }
-
-    public List<Job> getAllJobs() {
-        return jobRepository.findAll();
-    }
-
-    public void applyJob(Long jobId, String userEmail) {
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
-
-        Application application = new Application();
-        application.setJob(job);
-        application.setUserEmail(userEmail);
-
-        applicationRepository.save(application);
-    }
-
-    public List<Job> getJobsByRecruiter(String email) {
-
-        return jobRepository.findByRecruiterEmail(email);
-
-    }
-
-    public void deleteJob(Long id) {
-
-        jobRepository.deleteById(id);
-    }
-
-    public Job getJobById(Long id) {
-        return jobRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
-    }
-
-    @Transactional
-    public void updateJob(Long id, Job job) {
-
-        Job existingJob = jobRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
-
-        existingJob.setTitle(job.getTitle());
-        existingJob.setDescription(job.getDescription());
-        existingJob.setCompany(job.getCompany());
-        existingJob.setLocation(job.getLocation());
-        existingJob.setSalary(job.getSalary());
+    // Pagination + Sorting + Search
 
 
-        jobRepository.save(existingJob);
-    }
+
+
+    Page<Job> searchJobsByRecruiter(String email, String keyword, Pageable pageable);
+
+    // Apply job
+    void applyJob(Long jobId, String userEmail);
+
+
+
+    Page<Job> getAllJobs(Pageable pageable, int page);
 }

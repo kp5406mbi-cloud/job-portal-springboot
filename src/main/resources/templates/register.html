@@ -16,28 +16,71 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            width: 300px;
+            width: 320px;
             text-align: center;
         }
 
-        input, select {
+        input, select, button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
+             box-sizing: border-box;
         }
 
         button {
-            width: 100%;
-            padding: 10px;
             background: #667eea;
             color: white;
             border: none;
             border-radius: 5px;
+            cursor: pointer;
         }
 
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .role-toggle {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.role-toggle label {
+    flex: 1;
+    cursor: pointer;
+}
+
+.role-toggle input {
+    display: none;
+}
+
+.role-toggle span {
+    display: block;
+    padding: 10px;
+    border: 2px solid #667eea;
+    border-radius: 6px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+/* selected */
+.role-toggle input:checked + span {
+    background: #667eea;
+    color: white;
+}
     </style>
 </head>
 
@@ -47,20 +90,30 @@
 
     <h2>Register</h2>
 
-
-    <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
 
     <form th:action="@{/register}" method="post">
 
-        <input type="email" name="email" placeholder="Email" required>
+        <p>
+            Already have an account?
+            <a href="/login">Login here</a>
+        </p>
 
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="email" name="email" placeholder="Email">
 
-        <select name="role" required>
-            <option value="">Select Role</option>
-            <option value="USER">Job Seeker</option>
-            <option value="RECRUITER">Recruiter</option>
-        </select>
+        <input type="password" name="password" placeholder="Password">
+
+        <div class="role-toggle">
+            <label>
+                <input type="radio" name="role" value="USER" required>
+                <span>Job Seeker</span>
+            </label>
+
+            <label>
+                <input type="radio" name="role" value="RECRUITER">
+                <span>Recruiter</span>
+            </label>
+        </div>
 
         <button type="submit">Register</button>
 
