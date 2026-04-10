@@ -1,4 +1,4 @@
-package com.jobportal.controller;
+/*package com.jobportal.controller;
 
 import com.jobportal.entity.Application;
 import com.jobportal.entity.Job;
@@ -77,6 +77,83 @@ public class DashboardController {
     @GetMapping("/clear-jobs")
     public String clearJobs() {
         jobRepository.deleteAll();
+        return "redirect:/recruiter/dashboard";
+    }
+}  */
+
+
+
+
+
+package com.jobportal.controller;
+
+import com.jobportal.entity.Job;
+import com.jobportal.service.JobService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.security.Principal;
+import java.util.*;
+
+@Controller
+public class DashboardController {
+
+    @Autowired
+    private JobService jobService;
+
+    // ================= USER DASHBOARD =================
+    @GetMapping("/user/dashboard")
+    public String userDashboard(Model model) {
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        model.addAttribute("jobs",
+                jobService.getAllJobs(pageable, 0).getContent()
+        );
+
+        return "user-dashboard";
+    }
+
+    // ================= RECRUITER DASHBOARD =================
+    @GetMapping("/recruiter/dashboard")
+    public String recruiterDashboard(Model model, Principal principal) {
+
+        String email = principal.getName();
+
+        List<Job> jobs = jobService.getJobsByRecruiter(email);
+
+        // Dummy applications map (no DB)
+        Map<Long, List<Object>> applicationsMap = new HashMap<>();
+
+        for (Job job : jobs) {
+            applicationsMap.put(job.getId(), new ArrayList<>());
+        }
+
+        model.addAttribute("jobs", jobs);
+        model.addAttribute("applicationsMap", applicationsMap);
+
+        return "recruiter-dashboard"; // or your correct template
+    }
+
+    // ================= ROLE REDIRECT =================
+    @GetMapping("/dashboard")
+    public String dashboard(Authentication auth) {
+        if (auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_RECRUITER"))) {
+            return "redirect:/recruiter/dashboard";
+        }
+        return "redirect:/user/dashboard";
+    }
+
+    // ================= CLEAR JOBS (DUMMY) =================
+    @GetMapping("/clear-jobs")
+    public String clearJobs() {
+        System.out.println("Cleared jobs (dummy)");
         return "redirect:/recruiter/dashboard";
     }
 }
