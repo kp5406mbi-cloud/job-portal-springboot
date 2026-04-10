@@ -57,7 +57,7 @@ public class SecurityConfig{
 
                         // ROLE BASED
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
-                        .requestMatchers("/jobs", "/jobs/**").hasRole("USER")
+                        .requestMatchers("/jobs", "/jobs/**").permitAll()
                         .requestMatchers("/apply/**").hasRole("USER")
 
                         // FINAL RULE (ONLY ONCE)
