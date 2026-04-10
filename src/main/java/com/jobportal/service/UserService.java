@@ -91,24 +91,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // Dummy user (for demo, no DB)
         return new org.springframework.security.core.userdetails.User(
                 "test@example.com",
-                "$2a$10$Dow1nN8zG1sJ8Xc9Fh2vQe0g6F6Jg8jYcY5h8nJ6yK1rZ9z7xY1aK", // password: "password"
+                "{noop}password", // IMPORTANT FIX
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
-
-    // Dummy methods (optional)
-    public String registerUser() {
-        return "User registered (dummy)";
-    }
-
-    public String loginUser() {
-        return "Login successful (dummy)";
-    }
 }
-
 
 
 
