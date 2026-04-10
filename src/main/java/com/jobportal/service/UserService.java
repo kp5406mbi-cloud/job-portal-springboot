@@ -82,6 +82,7 @@ package com.jobportal.service;
 import com.jobportal.entity.Users;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -94,8 +95,8 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         return new org.springframework.security.core.userdetails.User(
-                "test@example.com",
-                "{noop}password", // IMPORTANT FIX
+                email,
+                new BCryptPasswordEncoder().encode("password"),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
