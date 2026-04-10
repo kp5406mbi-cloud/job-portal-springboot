@@ -30,4 +30,6 @@ public interface JobService {
 
 
     Page<Job> getAllJobs(Pageable pageable, int page);
+
+    List<Job> getAllJobs();
 }

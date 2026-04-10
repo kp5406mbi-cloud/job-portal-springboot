@@ -1,24 +1,17 @@
 package com.jobportal.service;
 
-import com.jobportal.entity.Application;
 import com.jobportal.entity.Job;
-import com.jobportal.exception.ResourceNotFoundException;
-import com.jobportal.repository.ApplicationRepository;
-import com.jobportal.repository.JobRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
 
-    @Autowired
+/*    @Autowired
     private JobRepository jobRepository;
 
     @Autowired
@@ -109,5 +102,78 @@ public class JobServiceImpl implements JobService {
 
 
 
+    }    */
+
+    @Override
+    public Job saveJob(Job job) {
+        return job;
     }
+
+    @Override
+    public Job getJobById(Long id) {
+        Job job = new Job();
+        job.setTitle("Software Engineer");
+        job.setCompany("Demo Company");
+        job.setLocation("Remote");
+        return job;
+    }
+
+    @Override
+    public Job updateJob(Long id, Job job) {
+        return job;
+    }
+
+    @Override
+    public void deleteJob(Long id) {
+
+    }
+
+    @Override
+    public List<Job> getJobsByRecruiter(String email) {
+        return List.of();
+    }
+
+    @Override
+    public Page<Job> searchJobsByRecruiter(String email, String keyword, Pageable pageable) {
+        return Page.empty();
+    }
+
+    @Override
+    public void applyJob(Long jobId, String userEmail) {
+
+    }
+
+    @Override
+    public Page<Job> getAllJobs(Pageable pageable, int page) {
+        List<Job> jobs = new ArrayList<>();
+
+        Job job = new Job();
+        job.setTitle("Software Engineer");
+        job.setCompany("Demo Company");
+        job.setLocation("Remote");
+
+        jobs.add(job);
+
+        return new org.springframework.data.domain.PageImpl<>(jobs);
+    }
+
+    @Override
+    public List<Job> getAllJobs() {
+        List<Job> jobs = new ArrayList<>();
+
+        Job job = new Job();
+        job.setTitle("Software Engineer");
+        job.setCompany("Demo Company");
+        job.setLocation("Remote");
+
+        jobs.add(job);
+
+        return jobs;
+    }
+
+
 }
+
+
+
+
