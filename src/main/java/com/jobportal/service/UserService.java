@@ -1,4 +1,4 @@
-package com.jobportal.service;
+/*package com.jobportal.service;
 
 import com.jobportal.entity.Users;
 import com.jobportal.repository.UserRepository;
@@ -20,8 +20,8 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
 
 
-    @Autowired
-    private UserRepository userRepository;
+ /*   @Autowired
+    private UserRepository userRepository; */
 
 
  /*   public Users saveUser(Users user) {
@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
     }  */
 
 
-    public List<Users> getAllUsers() {
+  /*  public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -60,9 +60,54 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    @Service
+    public class UserServiceImpl implements UserService {
 
+        @Override
+        public String registerUser(...) {
+            return "User registered (dummy)";
+        }
+
+        @Override
+        public String loginUser(...) {
+            return "Login successful (dummy)";
+        }
+    }
+
+
+}  */
+
+package com.jobportal.service;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class UserService implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        // Dummy user (for demo, no DB)
+        return new org.springframework.security.core.userdetails.User(
+                "test@example.com",
+                "$2a$10$Dow1nN8zG1sJ8Xc9Fh2vQe0g6F6Jg8jYcY5h8nJ6yK1rZ9z7xY1aK", // password: "password"
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+    }
+
+    // Dummy methods (optional)
+    public String registerUser() {
+        return "User registered (dummy)";
+    }
+
+    public String loginUser() {
+        return "Login successful (dummy)";
+    }
 }
-
 
 
 
