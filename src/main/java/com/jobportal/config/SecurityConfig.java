@@ -140,6 +140,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/login", "/register", "/css/**").permitAll()
                         .requestMatchers("/jobs", "/jobs/**").permitAll()
+                        .requestMatchers("/", "/api/**").permitAll()
 
                         // ROLE BASED
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")

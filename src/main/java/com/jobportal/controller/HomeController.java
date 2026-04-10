@@ -1,4 +1,4 @@
-package com.jobportal.controller;
+/*package com.jobportal.controller;
 
 import com.jobportal.dto.UserDTO;
 import com.jobportal.entity.Users;
@@ -55,7 +55,22 @@ public class HomeController {
     @GetMapping("/recruiter/dashboard")
     public String recruiterDashboard() {
         return "Recruiter Dashboard";
-    } */
+    }
 
 
+}  */
+
+
+package com.jobportal.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HomeController {
+
+    @GetMapping("/")
+    public String home() {
+        return "App is running";
+    }
 }
