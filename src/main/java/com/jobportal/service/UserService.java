@@ -79,9 +79,11 @@ public class UserService implements UserDetailsService {
 
 package com.jobportal.service;
 
+import com.jobportal.entity.Users;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -96,6 +98,12 @@ public class UserService implements UserDetailsService {
                 "{noop}password", // IMPORTANT FIX
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
+    }
+
+
+
+    public void saveUser(Users user) {
+        System.out.println("Dummy user saved: " + user.getEmail());
     }
 }
 

@@ -1,4 +1,4 @@
-package com.jobportal.service;
+/*package com.jobportal.service;
 
 import com.jobportal.entity.Application;
 import com.jobportal.entity.Job;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Service
+/*@Service
 public class ApplicationService {
 
 
@@ -81,6 +81,44 @@ public class ApplicationService {
         Application app = applicationRepository.findById(id).orElseThrow();
         app.setStatus(status);
         applicationRepository.save(app);
+    }
+}
+
+@Service
+public class ApplicationService {
+
+    public void applyJob(Long jobId, String userEmail) {
+        System.out.println("Dummy apply: " + jobId + " by " + userEmail);
+    }
+}  */
+
+
+
+package com.jobportal.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.*;
+
+@Service
+public class ApplicationService {
+
+    public boolean apply(Long jobId, String userEmail, MultipartFile file) {
+        System.out.println("Dummy apply: " + jobId + " by " + userEmail);
+        return false;
+    }
+
+    public List<Object> getApplicationsByJobId(Long jobId) {
+        return new ArrayList<>();
+    }
+
+    public void updateStatus(Long applicationId, String status) {
+        System.out.println("Dummy update status: " + applicationId + " -> " + status);
+    }
+
+    public List<Long> getAppliedJobIds(String userEmail) {
+        return new ArrayList<>();
     }
 }
 

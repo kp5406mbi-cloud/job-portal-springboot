@@ -1,4 +1,4 @@
-package com.jobportal.controller;
+/*package com.jobportal.controller;
 
 import com.jobportal.entity.Application;
 import com.jobportal.repository.ApplicationRepository;
@@ -114,4 +114,91 @@ public class ApplicationController {
     }
 
 
+}  */
+
+package com.jobportal.controller;
+
+import com.jobportal.service.ApplicationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+@Controller
+public class ApplicationController {
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    // ================= APPLY JOB =================
+    @PostMapping("/apply/{id}")
+    public String applyJob(@PathVariable Long id,
+                           Authentication auth,
+                           @RequestParam("file") MultipartFile file,
+                           RedirectAttributes redirectAttributes) {
+
+        try {
+            boolean applied = applicationService.apply(id, auth.getName(), file);
+
+            if (!applied) {
+                redirectAttributes.addFlashAttribute("error", "Already applied!");
+            } else {
+                redirectAttributes.addFlashAttribute("success", "Application submitted!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Upload failed!");
+        }
+
+        return "redirect:/user/jobs";
+    }
+
+    // ================= DOWNLOAD RESUME =================
+    @GetMapping("/resume/{id}")
+    public ResponseEntity<Resource> downloadResume(@PathVariable Long id) {
+
+        try {
+            // Dummy file (no DB dependency)
+            Path path = Paths.get("uploads/dummy.pdf");
+
+            Resource resource = new UrlResource(path.toUri());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"resume.pdf\"")
+                    .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
+                    .body(resource);
+
+        } catch (Exception e) {
+            throw new RuntimeException("File not found");
+        }
+    }
+
+    // ================= ACCEPT APPLICATION =================
+    @PostMapping("/recruiter/application/{id}/accept")
+    public String acceptApplication(@PathVariable Long id) {
+
+        System.out.println("Accepted application: " + id);
+
+        return "redirect:/recruiter/applicants";
+    }
+
+    // ================= REJECT APPLICATION =================
+    @PostMapping("/recruiter/application/{id}/reject")
+    public String rejectApplication(@PathVariable Long id) {
+
+        System.out.println("Rejected application: " + id);
+
+        return "redirect:/recruiter/applicants";
+    }
 }
