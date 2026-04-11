@@ -24,10 +24,10 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
 
-    public Users saveUser(Users user) {
+  /*  public Users saveUser(Users user) {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword())); // direct
         return userRepository.save(user);
-    }
+    }  */
 
 
     public List<Users> getAllUsers() {
@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-/*    public void saveUser(Users user) {
+    public void saveUser(Users user) {
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("User already exists");
@@ -58,7 +58,7 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-    }  */
+    }
 
 /*    @Service
     public class UserServiceImpl implements UserService {

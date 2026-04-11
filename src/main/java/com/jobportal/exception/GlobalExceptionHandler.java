@@ -18,4 +18,15 @@ public class GlobalExceptionHandler {
                 )
         );
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<?> handleUserExists(UserAlreadyExistsException ex) {
+
+        return ResponseEntity.status(409).body(
+                Map.of(
+                        "status", 409,
+                        "error", ex.getMessage()
+                )
+        );
+    }
 }
