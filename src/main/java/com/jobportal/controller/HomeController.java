@@ -5,11 +5,12 @@ import com.jobportal.entity.Users;
 
 import com.jobportal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class HomeController {
 
     @Autowired
@@ -17,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "Job Portal Running 🚀";
+        return "redirect:/login";
     }
 
     @GetMapping("/add")
