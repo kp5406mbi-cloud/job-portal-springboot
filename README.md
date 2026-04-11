@@ -155,9 +155,9 @@ GET /api/jobs
 Set the following variables in your deployment platform:
 
 ```
-SPRING_DATASOURCE_URL=your_db_url
-SPRING_DATASOURCE_USERNAME=your_username
-SPRING_DATASOURCE_PASSWORD=your_password
+SPRING_DATASOURCE_URL=jdbc:postgresql://dpg-d78enj7kijhs7387npn0-a:5432/jobportal_87as
+SPRING_DATASOURCE_USERNAME=jobportaldb_5k4w_user
+SPRING_DATASOURCE_PASSWORD=thkwY5eMy4fpTfLjT06hi7EKeRkkMsMr
 SPRING_JPA_HIBERNATE_DDL_AUTO=update
 ```
 
