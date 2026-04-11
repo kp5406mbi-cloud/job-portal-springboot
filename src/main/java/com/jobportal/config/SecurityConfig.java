@@ -49,34 +49,18 @@ public class SecurityConfig{
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-
-                        // PUBLIC
-                        .requestMatchers("/", "/api/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/login", "/register", "/css/**").permitAll()
                         .requestMatchers("/jobs", "/jobs/**").permitAll()
 
-                        // ROLE BASED
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
                         .requestMatchers("/apply/**").hasRole("USER")
 
-                        // FINAL RULE
                         .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            if (request.getRequestURI().startsWith("/api")) {
-                                response.setStatus(401);
-                                response.setContentType("application/json");
-                                response.getWriter().write("{\"error\": \"Unauthorized\"}");
-                            } else {
-                                response.sendRedirect("/login");
-                            }
-                        })
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
 
                 .formLogin(form -> form
@@ -89,6 +73,7 @@ public class SecurityConfig{
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
+
 
         return http.build();
     }
