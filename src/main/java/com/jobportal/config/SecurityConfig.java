@@ -7,6 +7,7 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -52,8 +53,9 @@ public class SecurityConfig{
 
 
                         // PUBLIC
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/", "/api/**").permitAll()
                         .requestMatchers("/login", "/register", "/css/**").permitAll()
+                        .requestMatchers("/jobs", "/jobs/**").permitAll()
 
                         // ROLE BASED
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
@@ -63,7 +65,9 @@ public class SecurityConfig{
                         // FINAL RULE (ONLY ONCE)
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(ex -> ex
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .http.exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
                             if (request.getRequestURI().startsWith("/api")) {
                                 response.setStatus(401);
