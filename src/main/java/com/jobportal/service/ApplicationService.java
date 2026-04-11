@@ -1,4 +1,4 @@
-/*package com.jobportal.service;
+package com.jobportal.service;
 
 import com.jobportal.entity.Application;
 import com.jobportal.entity.Job;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/*@Service
+@Service
 public class ApplicationService {
 
 
@@ -84,13 +84,13 @@ public class ApplicationService {
     }
 }
 
-@Service
+/*@Service
 public class ApplicationService {
 
     public void applyJob(Long jobId, String userEmail) {
         System.out.println("Dummy apply: " + jobId + " by " + userEmail);
     }
-}  */
+}
 
 
 
@@ -120,5 +120,5 @@ public class ApplicationService {
     public List<Long> getAppliedJobIds(String userEmail) {
         return new ArrayList<>();
     }
-}
+} */
 

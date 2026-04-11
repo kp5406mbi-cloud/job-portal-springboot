@@ -1,4 +1,4 @@
-/*package com.jobportal.service;
+package com.jobportal.service;
 
 import com.jobportal.entity.Users;
 import com.jobportal.repository.UserRepository;
@@ -20,17 +20,17 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
 
 
- /*   @Autowired
-    private UserRepository userRepository; */
+    @Autowired
+    private UserRepository userRepository;
 
 
- /*   public Users saveUser(Users user) {
+    public Users saveUser(Users user) {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword())); // direct
         return userRepository.save(user);
-    }  */
+    }
 
 
-  /*  public List<Users> getAllUsers() {
+    public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public void saveUser(Users user) {
+/*    public void saveUser(Users user) {
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("User already exists");
@@ -58,9 +58,9 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-    }
+    }  */
 
-    @Service
+/*    @Service
     public class UserServiceImpl implements UserService {
 
         @Override
@@ -72,12 +72,12 @@ public class UserService implements UserDetailsService {
         public String loginUser(...) {
             return "Login successful (dummy)";
         }
-    }
+    } */
 
 
-}  */
+}
 
-package com.jobportal.service;
+/*ackage com.jobportal.service;
 
 import com.jobportal.entity.Users;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -106,7 +106,7 @@ public class UserService implements UserDetailsService {
     public void saveUser(Users user) {
         System.out.println("Dummy user saved: " + user.getEmail());
     }
-}
+}  */
 
 
 

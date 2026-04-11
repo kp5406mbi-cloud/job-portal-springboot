@@ -1,4 +1,4 @@
-/*package com.jobportal.controller;
+package com.jobportal.controller;
 
 import com.jobportal.dto.UserDTO;
 import com.jobportal.entity.Users;
@@ -33,14 +33,15 @@ public class HomeController {
 
         return "User saved!";
     }
+}
 
-    @GetMapping("/users")
+ /*   @GetMapping("/users")
     public List<UserDTO> getUsers() {
         return userService.getAllUsers()
                 .stream()
                 .map(user -> new UserDTO(user.getUserId(), user.getEmail()))
                 .toList();
-    }
+    }  */
 
  /*   @GetMapping("/dashboard")
     public String dashboard() {
@@ -61,7 +62,7 @@ public class HomeController {
 }  */
 
 
-package com.jobportal.controller;
+/*package com.jobportal.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -73,4 +74,4 @@ public class HomeController {
     public String home() {
         return "App is running";
     }
-}
+} */

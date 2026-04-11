@@ -1,9 +1,16 @@
 package com.jobportal.service;
 
+import com.jobportal.entity.Application;
 import com.jobportal.entity.Job;
+import com.jobportal.exception.ResourceNotFoundException;
+import com.jobportal.repository.ApplicationRepository;
+import com.jobportal.repository.JobRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +18,7 @@ import java.util.List;
 @Service
 public class JobServiceImpl implements JobService {
 
-/*    @Autowired
+    @Autowired
     private JobRepository jobRepository;
 
     @Autowired
@@ -102,9 +109,14 @@ public class JobServiceImpl implements JobService {
 
 
 
-    }    */
+    }
 
     @Override
+    public List<Job> getAllJobs() {
+        return List.of();
+    }
+
+ /*   @Override
     public Job saveJob(Job job) {
         return job;
     }
@@ -169,7 +181,7 @@ public class JobServiceImpl implements JobService {
         jobs.add(job);
 
         return jobs;
-    }
+    }  */
 
 
 }

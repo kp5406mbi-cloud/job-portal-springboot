@@ -1,4 +1,4 @@
-/*package com.jobportal.controller;
+package com.jobportal.controller;
 
 import com.jobportal.entity.Application;
 import com.jobportal.repository.ApplicationRepository;
@@ -114,9 +114,9 @@ public class ApplicationController {
     }
 
 
-}  */
+}
 
-package com.jobportal.controller;
+/*package com.jobportal.controller;
 
 import com.jobportal.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,4 +200,4 @@ public class ApplicationController {
 
         return "redirect:/recruiter/applicants";
     }
-}
+}  */

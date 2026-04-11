@@ -1,4 +1,4 @@
-/*package com.jobportal.controller;
+package com.jobportal.controller;
 
 import com.jobportal.entity.Application;
 import com.jobportal.entity.Job;
@@ -79,13 +79,13 @@ public class DashboardController {
         jobRepository.deleteAll();
         return "redirect:/recruiter/dashboard";
     }
-}  */
+}
 
 
 
 
 
-package com.jobportal.controller;
+/*package com.jobportal.controller;
 
 import com.jobportal.entity.Job;
 import com.jobportal.service.JobService;
@@ -119,7 +119,7 @@ public class DashboardController {
         return "user-dashboard";
     }
 
-    // ================= RECRUITER DASHBOARD =================
+   /* // ================= RECRUITER DASHBOARD =================
     @GetMapping("/recruiter/dashboard")
     public String recruiterDashboard(Model model, Principal principal) {
 
@@ -156,4 +156,4 @@ public class DashboardController {
         System.out.println("Cleared jobs (dummy)");
         return "redirect:/recruiter/dashboard";
     }
-}
+}  */

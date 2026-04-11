@@ -1,4 +1,4 @@
-/*package com.jobportal.config;
+package com.jobportal.config;
 
 import com.jobportal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,9 +102,9 @@ public class SecurityConfig{
         };
     }
 
-} */
+}
 
-package com.jobportal.config;
+/*package com.jobportal.config;
 
 import com.jobportal.service.UserService;
 import org.springframework.context.annotation.Bean;
@@ -190,4 +190,4 @@ public class SecurityConfig {
             }
         };
     }
-}
+}   */
