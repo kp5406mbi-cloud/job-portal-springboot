@@ -93,18 +93,62 @@ src/
 
 ---
 
-## 🔑 API Endpoints (Sample)
+---
 
-| Method | Endpoint    | Description            |
-| ------ | ----------- | ---------------------- |
-| GET    | /           | Health check           |
-| POST   | /register   | Register new user      |
-| POST   | /login      | Login user             |
-| GET    | /jobs       | Get all jobs           |
-| POST   | /jobs       | Create job (Recruiter) |
-| POST   | /apply/{id} | Apply to job           |
+## 🚀 API Endpoints
+
+### Base URL
+
 
 ---
+
+### 🔹 Public APIs
+
+| Method | Endpoint        | Description            |
+|--------|---------------|------------------------|
+| GET    | /api/jobs     | Fetch all jobs (paginated) |
+| GET    | /api/jobs/{id} | Get job by ID         |
+
+---
+
+### 🔹 Authentication APIs
+
+| Method | Endpoint        | Description        |
+|--------|---------------|--------------------|
+| POST   | /register     | Register new user  |
+| POST   | /login        | Login user         |
+
+---
+
+### 🔹 Protected APIs (Role-Based)
+
+| Method | Endpoint          | Role Required |
+|--------|------------------|--------------|
+| POST   | /api/jobs        | RECRUITER    |
+| POST   | /api/apply/{id}  | USER         |
+
+---
+
+### 📌 Example Request
+
+```http
+GET /api/jobs
+
+{
+  "content": [
+    {
+      "id": 1,
+      "title": "Software Engineer",
+      "company": "Meta",
+      "location": "Hyderabad",
+      "salary": 150000
+    }
+  ],
+  "totalPages": 5,
+  "totalElements": 50
+}
+
+
 
 ## ⚙️ Environment Variables
 
