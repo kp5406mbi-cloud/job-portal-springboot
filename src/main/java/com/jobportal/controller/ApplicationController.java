@@ -143,11 +143,10 @@ public class ApplicationController {
     @PostMapping("/apply/{id}")
     public String applyJob(@PathVariable Long id,
                            Authentication auth,
-                           @RequestParam("file") MultipartFile file,
                            RedirectAttributes redirectAttributes) {
 
         try {
-            boolean applied = applicationService.apply(id, auth.getName(), file);
+            boolean applied = applicationService.apply(id, auth.getName(),null);
 
             if (!applied) {
                 redirectAttributes.addFlashAttribute("error", "Already applied!");
