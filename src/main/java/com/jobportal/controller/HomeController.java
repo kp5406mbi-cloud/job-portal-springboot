@@ -25,7 +25,7 @@ public class HomeController {
 
         Users user = new Users();
         user.setEmail("test2@gmail.com");
-        user.setPassword("1234");
+        user.setPassword("{noop}1234");
 
         user.setRole("USER");
 
