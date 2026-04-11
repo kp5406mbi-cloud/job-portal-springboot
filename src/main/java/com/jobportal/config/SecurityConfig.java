@@ -47,10 +47,8 @@ public class SecurityConfig{
                 .authenticationProvider(authenticationProvider)
 
                 .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
-
-                        
-
 
                         // PUBLIC
                         .requestMatchers("/", "/api/**").permitAll()
@@ -59,15 +57,17 @@ public class SecurityConfig{
 
                         // ROLE BASED
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
-                        .requestMatchers("/jobs", "/jobs/**").permitAll()
                         .requestMatchers("/apply/**").hasRole("USER")
 
-                        // FINAL RULE (ONLY ONCE)
+                        // FINAL RULE
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-                .http.exceptionHandling(ex -> ex
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
+                .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
                             if (request.getRequestURI().startsWith("/api")) {
                                 response.setStatus(401);
@@ -78,11 +78,13 @@ public class SecurityConfig{
                             }
                         })
                 )
+
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler(successHandler())
                         .permitAll()
                 )
+
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
