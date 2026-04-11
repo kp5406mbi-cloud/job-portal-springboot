@@ -1,4 +1,4 @@
-/*package com.jobportal.controller;
+package com.jobportal.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,11 +8,13 @@ public class HealthController {
 
     @GetMapping("/")
     public String home() {
-        return "OK";
+        return "redirect:/jobs";
     }
 
-    @GetMapping("/health")
+  /*  @GetMapping("/health")
     public String health() {
         return "UP";
-    }
-} */
+    }  */
+
+
+}
