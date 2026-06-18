@@ -12,9 +12,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import com.jobportal.service.CustomOAuth2UserService;
 
 @Configuration
 public class SecurityConfig{
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
 
 
 
@@ -52,6 +59,13 @@ public class SecurityConfig{
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/login", "/register", "/css/**").permitAll()
                         .requestMatchers("/jobs", "/jobs/**").permitAll()
+                        .requestMatchers(
+                                "/login",
+                                "/register",
+                                "/css/**",
+                                "/oauth2/**",
+                                "/login/oauth2/**"
+                        ).permitAll()
 
                         .requestMatchers("/recruiter/**").hasRole("RECRUITER")
                         .requestMatchers("/apply/**").hasRole("USER")
@@ -67,6 +81,13 @@ public class SecurityConfig{
                         .loginPage("/login")
                         .successHandler(successHandler())
                         .permitAll()
+                )
+
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login")
+                        .userInfoEndpoint(userInfo ->
+                                userInfo.userService(customOAuth2UserService))
+                        .successHandler(successHandler())
                 )
 
                 .logout(logout -> logout
