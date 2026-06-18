@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @Controller
 @RequestMapping("/user")
@@ -37,11 +38,21 @@ public class UserJobController {
         List<Job> jobs = jobPage.getContent();
         model.addAttribute("jobs", jobs);
 
-        model.addAttribute("username", principal.getName());
+        String username;
+
+        if (auth.getPrincipal() instanceof OAuth2User oauthUser) {
+            username = oauthUser.getAttribute("email");
+        } else {
+            username = principal.getName();
+        }
+
+        model.addAttribute("username", username);
+
+
 
         // Handle logged-in users safely
         if (auth != null && auth.isAuthenticated()) {
-            List<Long> appliedJobIds = applicationService.getAppliedJobIds(auth.getName());
+            List<Long> appliedJobIds = applicationService.getAppliedJobIds(username);
             if (appliedJobIds == null) {
                 appliedJobIds = new ArrayList<>();
             }
