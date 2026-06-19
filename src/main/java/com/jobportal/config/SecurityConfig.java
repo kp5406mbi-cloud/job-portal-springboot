@@ -113,7 +113,14 @@ public class SecurityConfig{
     public AuthenticationSuccessHandler successHandler() {
         return (request, response, authentication) -> {
 
-            var authorities = authentication.getAuthorities();
+
+
+
+
+            System.out.println("AUTHORITIES:");
+
+            authentication.getAuthorities()
+                    .forEach(a -> System.out.println(a.getAuthority()));
 
             String email = null;
 

@@ -24,7 +24,8 @@ public class RoleController {
     @PostMapping("/choose-role")
     public String saveRole(
             @RequestParam String role,
-            Authentication authentication
+            Authentication authentication,
+            jakarta.servlet.http.HttpServletRequest request
     ) {
 
         OAuth2User oauthUser =
@@ -40,10 +41,9 @@ public class RoleController {
 
         userRepository.save(user);
 
-        if(role.equals("RECRUITER")){
-            return "redirect:/recruiter/dashboard";
-        }
+        // clear old session
+        request.getSession().invalidate();
 
-        return "redirect:/user/jobs";
+        return "redirect:/login";
     }
 }
