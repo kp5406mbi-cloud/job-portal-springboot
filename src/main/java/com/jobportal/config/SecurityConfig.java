@@ -140,6 +140,8 @@ public class SecurityConfig{
                     return;
                 }
 
+                System.out.println("DB ROLE = " + user.getRole());
+
                 if(user != null &&
                         "RECRUITER".equals(user.getRole())) {
 
