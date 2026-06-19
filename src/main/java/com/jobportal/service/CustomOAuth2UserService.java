@@ -8,6 +8,11 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+
+import java.util.Collections;
+
 import java.util.UUID;
 
 @Service
@@ -54,7 +59,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     return saved;
                 });
 
-        return oauthUser;
+        Users dbUser = userRepository.findByEmail(email)
+                .orElseThrow();
+
+        return new DefaultOAuth2User(
+                Collections.singleton(
+                        new SimpleGrantedAuthority("ROLE_" + dbUser.getRole())
+                ),
+                oauthUser.getAttributes(),
+                "email"
+        );
+
+
     }
+
+
 
 }
