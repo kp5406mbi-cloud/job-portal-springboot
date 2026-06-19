@@ -45,7 +45,13 @@ public class DashboardController {
     @GetMapping("/recruiter/dashboard")
     public String recruiterDashboard(Model model, Principal principal) {
 
-        String email = principal.getName();
+        String email;
+
+        if (principal instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
+            email = token.getPrincipal().getAttribute("email");
+        } else {
+            email = principal.getName();
+        }
 
         List<Job> jobs = jobService.getJobsByRecruiter(email);
 

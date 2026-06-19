@@ -76,8 +76,9 @@ public class SecurityConfig{
                                 "/login/oauth2/**"
                         ).permitAll()
 
-                        .requestMatchers("/recruiter/**").authenticated()
+                        .requestMatchers("/recruiter/**").hasRole("RECRUITER")
                         .requestMatchers("/apply/**").hasRole("USER")
+
 
                         .anyRequest().authenticated()
                 )

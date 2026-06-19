@@ -32,7 +32,13 @@ public class JobController {
                                     @RequestParam(defaultValue = "id") String sortBy,
                                     @RequestParam(defaultValue = "asc") String direction) {
 
-        String username = principal.getName();
+        String username;
+
+        if (principal instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
+            username = token.getPrincipal().getAttribute("email");
+        } else {
+            username = principal.getName();
+        }
         model.addAttribute("username", username);
 
         Sort sort = direction.equalsIgnoreCase("desc")
@@ -72,7 +78,15 @@ public class JobController {
     public String saveJob(@ModelAttribute Job job, Principal principal) {
 
         // FIXED ORDER ✅
-        job.setRecruiterEmail(principal.getName());
+        String email;
+
+        if (principal instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
+            email = token.getPrincipal().getAttribute("email");
+        } else {
+            email = principal.getName();
+        }
+
+        job.setRecruiterEmail(email);
         jobService.saveJob(job);
 
         System.out.println("Saved job for: " + job.getRecruiterEmail());
@@ -101,7 +115,13 @@ public class JobController {
                             Principal principal) {
 
         job.setId(id); // VERY IMPORTANT
-        job.setRecruiterEmail(principal.getName()); // keep ownership
+        String username;
+
+        if (principal instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
+            username = token.getPrincipal().getAttribute("email");
+        } else {
+            username = principal.getName();
+        }
 
         jobService.updateJob(id, job);
 
