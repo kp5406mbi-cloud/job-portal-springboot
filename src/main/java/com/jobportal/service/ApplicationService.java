@@ -16,6 +16,8 @@ import java.util.List;
 @Service
 public class ApplicationService {
 
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -57,6 +59,18 @@ public class ApplicationService {
 
         applicationRepository.save(application);  // ✅ SAVE TO DB
 
+        emailService.sendMail(
+                userEmail,
+                "Application Submitted Successfully",
+                "Your application for the position '" +
+                        job.getTitle() +
+                        "' at " +
+                        job.getCompany() +
+                        " has been submitted successfully.\n\n" +
+                        "Status: PENDING\n\n" +
+                        "Thank you for using Job Portal."
+        );
+
         return true;
     }
 
@@ -81,6 +95,33 @@ public class ApplicationService {
         Application app = applicationRepository.findById(id).orElseThrow();
         app.setStatus(status);
         applicationRepository.save(app);
+
+        String jobTitle =
+                app.getJob().getTitle();
+
+        if ("ACCEPTED".equalsIgnoreCase(status)) {
+
+            emailService.sendMail(
+                    app.getUserEmail(),
+                    "Application Accepted",
+                    "Congratulations!\n\n" +
+                            "Your application for '" +
+                            jobTitle +
+                            "' has been accepted."
+            );
+        }
+
+        if ("REJECTED".equalsIgnoreCase(status)) {
+
+            emailService.sendMail(
+                    app.getUserEmail(),
+                    "Application Rejected",
+                    "Thank you for applying.\n\n" +
+                            "Your application for '" +
+                            jobTitle +
+                            "' was not selected at this time."
+            );
+        }
     }
 }
 
