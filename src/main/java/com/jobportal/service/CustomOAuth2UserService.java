@@ -39,7 +39,7 @@ public class CustomOAuth2UserService
 
                     user.setPassword(UUID.randomUUID().toString());
 
-                    user.setRole("USER");
+                    user.setRole("PENDING");
 
                     return userRepository.save(user);
                 });

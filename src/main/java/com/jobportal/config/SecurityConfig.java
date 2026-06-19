@@ -1,5 +1,7 @@
 package com.jobportal.config;
 
+import com.jobportal.entity.Users;
+import com.jobportal.repository.UserRepository;
 import com.jobportal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import com.jobportal.service.CustomOAuth2UserService;
@@ -18,9 +21,14 @@ import com.jobportal.service.CustomOAuth2UserService;
 public class SecurityConfig{
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final UserRepository userRepository;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+    public SecurityConfig(
+            CustomOAuth2UserService customOAuth2UserService,
+            UserRepository userRepository) {
+
         this.customOAuth2UserService = customOAuth2UserService;
+        this.userRepository = userRepository;
     }
 
 
@@ -62,6 +70,7 @@ public class SecurityConfig{
                         .requestMatchers(
                                 "/login",
                                 "/register",
+                                "/choose-role",
                                 "/css/**",
                                 "/oauth2/**",
                                 "/login/oauth2/**"
@@ -106,11 +115,33 @@ public class SecurityConfig{
 
             var authorities = authentication.getAuthorities();
 
-            if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_RECRUITER"))) {
-                response.sendRedirect("/recruiter/dashboard");
-            } else {
-                response.sendRedirect("/user/jobs");
+            String email = null;
+
+            if(authentication.getPrincipal() instanceof OAuth2User oauthUser){
+                email = oauthUser.getAttribute("email");
             }
+
+            if(email != null){
+
+                Users user =
+                        userRepository.findByEmail(email).orElse(null);
+
+                if(user != null &&
+                        "PENDING".equals(user.getRole())) {
+
+                    response.sendRedirect("/choose-role");
+                    return;
+                }
+
+                if(user != null &&
+                        "RECRUITER".equals(user.getRole())) {
+
+                    response.sendRedirect("/recruiter/dashboard");
+                    return;
+                }
+            }
+
+            response.sendRedirect("/user/jobs");
         };
     }
 
