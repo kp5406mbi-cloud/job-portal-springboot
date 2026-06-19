@@ -31,6 +31,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         System.out.println("GOOGLE EMAIL = " + email);
 
+        System.out.println(
+                "USER EXISTS = " +
+                        userRepository.findByEmail(email).isPresent()
+        );
+
         userRepository.findByEmail(email)
                 .orElseGet(() -> {
 
@@ -52,38 +57,4 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return oauthUser;
     }
 
-    userRepository.findByEmail(email)
-            .orElseGet(() -> {
-
-        try {
-
-            System.out.println("CREATING USER");
-
-            Users user = new Users();
-
-            user.setEmail(email);
-            user.setPassword(UUID.randomUUID().toString());
-            user.setRole("PENDING");
-
-            Users saved = userRepository.save(user);
-
-            System.out.println("SAVED USER ID = " + saved.getUserId());
-
-            return saved;
-
-        } catch (Exception e) {
-
-            System.out.println("SAVE FAILED");
-            e.printStackTrace();
-
-            throw e;
-        }
-
-
-
-
-
-
-
-
-    }
+}
