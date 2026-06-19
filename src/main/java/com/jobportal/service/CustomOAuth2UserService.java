@@ -4,15 +4,14 @@ import com.jobportal.entity.Users;
 import com.jobportal.repository.UserRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 @Service
-public class CustomOAuth2UserService
-        extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 
@@ -24,24 +23,30 @@ public class CustomOAuth2UserService
     public OAuth2User loadUser(OAuth2UserRequest request)
             throws OAuth2AuthenticationException {
 
-        OAuth2User oauthUser =
-                super.loadUser(request);
+        System.out.println("CUSTOM OAUTH SERVICE CALLED");
 
-        String email =
-                oauthUser.getAttribute("email");
+        OAuth2User oauthUser = super.loadUser(request);
+
+        String email = oauthUser.getAttribute("email");
+
+        System.out.println("GOOGLE EMAIL = " + email);
 
         userRepository.findByEmail(email)
                 .orElseGet(() -> {
 
+                    System.out.println("CREATING USER");
+
                     Users user = new Users();
 
                     user.setEmail(email);
-
                     user.setPassword(UUID.randomUUID().toString());
-
                     user.setRole("PENDING");
 
-                    return userRepository.save(user);
+                    Users saved = userRepository.save(user);
+
+                    System.out.println("SAVED USER ID = " + saved.getUserId());
+
+                    return saved;
                 });
 
         return oauthUser;
