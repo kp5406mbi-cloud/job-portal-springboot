@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
 
+    long countByRecruiterEmail(String recruiterEmail);
+
     List<Job> findByRecruiterEmail(String email);
 
     Page<Job> findByRecruiterEmail(String email, Pageable pageable);

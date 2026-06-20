@@ -42,34 +42,6 @@ public class DashboardController {
         return "user-dashboard";
     }
 
-    @GetMapping("/recruiter/dashboard")
-    public String recruiterDashboard(Model model, Principal principal) {
-
-        String email;
-
-        if (principal instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
-            email = token.getPrincipal().getAttribute("email");
-        } else {
-            email = principal.getName();
-        }
-
-        List<Job> jobs = jobService.getJobsByRecruiter(email);
-
-
-
-
-        Map<Long, List<Application>> applicationsMap = new HashMap<>();
-
-        for (Job job : jobs) {
-            List<Application> apps = applicationRepository.findByJob(job);
-            applicationsMap.put(job.getId(), apps);
-        }
-
-        model.addAttribute("jobs", jobs);
-        model.addAttribute("applicationsMap", applicationsMap);
-
-        return "redirect:/recruiter/jobs";
-    }
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication auth) {
@@ -84,6 +56,39 @@ public class DashboardController {
     public String clearJobs() {
         jobRepository.deleteAll();
         return "redirect:/recruiter/dashboard";
+    }
+
+    @GetMapping("/recruiter/dashboard")
+    public String recruiterDashboard(
+            Model model,
+            Principal principal) {
+
+        String email = principal.getName();
+
+        long totalJobs =
+                jobRepository.countByRecruiterEmail(email);
+
+        long totalApplications =
+                applicationRepository.count();
+
+        long accepted =
+                applicationRepository.countByStatus("ACCEPTED");
+
+        long rejected =
+                applicationRepository.countByStatus("REJECTED");
+
+        long pending =
+                applicationRepository.countByStatus("PENDING");
+
+        model.addAttribute("totalJobs", totalJobs);
+        model.addAttribute("totalApplications", totalApplications);
+        model.addAttribute("accepted", accepted);
+        model.addAttribute("rejected", rejected);
+        model.addAttribute("pending", pending);
+
+
+
+        return "recruiter-dashboard";
     }
 }
 

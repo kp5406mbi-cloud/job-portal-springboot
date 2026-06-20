@@ -13,6 +13,10 @@ import java.util.List;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     boolean existsByJobAndUserEmail(Job job, String userEmail);
 
+    long countByStatus(String status);
+
+    long count();
+
     List<Application> findByUserEmail(String userEmail);
 
     List<Application> findByJob(Job job);
