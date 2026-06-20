@@ -4,9 +4,10 @@ import com.jobportal.entity.Application;
 import com.jobportal.repository.ApplicationRepository;
 import com.jobportal.service.ApplicationService;
 import com.jobportal.service.JobService;
-import org.springframework.core.io.Resource;
+import com.jobportal.service.S3Service;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
+
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 
 @Controller
 public class ApplicationController {
+
+    @Autowired
+    private S3Service s3Service;
 
 
 
@@ -63,34 +65,29 @@ public class ApplicationController {
     }
 
     @GetMapping("/resume/{id}")
-    public ResponseEntity<Resource> downloadResume(@PathVariable Long id) throws IOException {
+    public ResponseEntity<byte[]> downloadResume(
+            @PathVariable Long id) throws Exception {
 
         Application app = applicationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Application not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Application not found"));
 
-
-        System.out.println("APP ID: " + app.getId());
-        System.out.println("RESUME PATH FROM DB: " + app.getResumePath());
-
-        if (app.getResumePath() == null || app.getResumePath().isEmpty()) {
-            throw new RuntimeException("Resume not found");
-        }
-
-        String uploadDir = System.getProperty("user.dir") + "/uploads/";
-        Path path = Paths.get(uploadDir).resolve(app.getResumePath());
-
-        if (!path.toFile().exists()) {
-            throw new RuntimeException("File not found at: " + path);
-        }
-
-        Resource resource = new UrlResource(path.toUri());
+        byte[] fileBytes =
+                s3Service.downloadFile(app.getResumePath());
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + path.getFileName() + "\"")
-                .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
-                .body(resource);
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" +
+                                app.getResumePath() + "\""
+                )
+                .header(
+                        HttpHeaders.CONTENT_TYPE,
+                        "application/pdf"
+                )
+                .body(fileBytes);
     }
+
 
     @PostMapping("/recruiter/application/{id}/accept")
     public String acceptApplication(@PathVariable Long id) {

@@ -17,6 +17,9 @@ import java.util.List;
 public class ApplicationService {
 
     @Autowired
+    private S3Service s3Service;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -25,7 +28,7 @@ public class ApplicationService {
     @Autowired
     private JobRepository jobRepository;
 
-    public boolean apply(Long jobId, String userEmail, MultipartFile file) throws IOException {
+    public boolean apply(Long jobId, String userEmail, MultipartFile file) throws Exception {
 
         Job job = jobRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
@@ -34,21 +37,12 @@ public class ApplicationService {
             return false;
         }
 
-        String uploadDir = System.getProperty("user.dir") + "/uploads/";
+        System.out.println("Uploading resume to S3...");
 
-        System.out.println("Original filename: " + file.getOriginalFilename());
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();;
-        System.out.println("Final filename: " + fileName);
-        System.out.println("Saving to DB: " + fileName);
+        String fileName = s3Service.uploadFile(file);
 
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
+        System.out.println("Uploaded to S3: " + fileName);
 
-
-        String filePath = uploadDir + fileName;
-
-        File dest = new File(filePath);
-        file.transferTo(dest);
 
         // ✅ VERY IMPORTANT PART
         Application application = new Application();
