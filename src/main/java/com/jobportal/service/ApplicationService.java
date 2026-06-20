@@ -57,21 +57,30 @@ public class ApplicationService {
         application.setResumePath(fileName);  // ✅ SAVE FILE NAME
         application.setAppliedDate(LocalDateTime.now());
 
-        applicationRepository.save(application);  // ✅ SAVE TO DB
+        applicationRepository.save(application);
 
-        emailService.sendMail(
-                userEmail,
-                "Application Submitted Successfully",
-                "Your application for the position '" +
-                        job.getTitle() +
-                        "' at " +
-                        job.getCompany() +
-                        " has been submitted successfully.\n\n" +
-                        "Status: PENDING\n\n" +
-                        "Thank you for using Job Portal."
-        );
+        try {
+
+            emailService.sendMail(
+                    userEmail,
+                    "Application Submitted Successfully",
+                    "Your application for the position '" +
+                            job.getTitle() +
+                            "' at " +
+                            job.getCompany() +
+                            " has been submitted successfully.\n\n" +
+                            "Status: PENDING\n\n" +
+                            "Thank you for using Job Portal."
+            );
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            System.out.println("MAIL FAILED BUT APPLICATION SAVED");
+        }
 
         return true;
+
     }
 
     public List<Long> getAppliedJobIds(String userEmail) {
@@ -101,26 +110,40 @@ public class ApplicationService {
 
         if ("ACCEPTED".equalsIgnoreCase(status)) {
 
-            emailService.sendMail(
-                    app.getUserEmail(),
-                    "Application Accepted",
-                    "Congratulations!\n\n" +
-                            "Your application for '" +
-                            jobTitle +
-                            "' has been accepted."
-            );
+            try {
+
+                emailService.sendMail(
+                        app.getUserEmail(),
+                        "Application Accepted",
+                        "Congratulations!\n\n" +
+                                "Your application for '" +
+                                jobTitle +
+                                "' has been accepted."
+                );
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if ("REJECTED".equalsIgnoreCase(status)) {
 
-            emailService.sendMail(
-                    app.getUserEmail(),
-                    "Application Rejected",
-                    "Thank you for applying.\n\n" +
-                            "Your application for '" +
-                            jobTitle +
-                            "' was not selected at this time."
-            );
+            try {
+
+                emailService.sendMail(
+                        app.getUserEmail(),
+                        "Application Rejected",
+                        "Thank you for applying.\n\n" +
+                                "Your application for '" +
+                                jobTitle +
+                                "' was not selected at this time."
+                );
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+           
         }
     }
 }
