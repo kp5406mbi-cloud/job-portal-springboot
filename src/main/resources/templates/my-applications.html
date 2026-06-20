@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Applications</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between mb-4">
+        <h2 class="text-primary">My Applications</h2>
+
+        <a href="/user/jobs"
+           class="btn btn-outline-primary">
+            Back To Jobs
+        </a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(applications)}"
+         class="alert alert-info">
+
+        You haven't applied to any jobs yet.
+    </div>
+
+    <div th:each="app : ${applications}"
+         class="card p-4 mb-3 shadow-sm">
+
+        <h4 th:text="${app.job.title}"></h4>
+
+        <p>
+            <strong>Company:</strong>
+            <span th:text="${app.job.company}"></span>
+        </p>
+
+        <p>
+            <strong>Location:</strong>
+            <span th:text="${app.job.location}"></span>
+        </p>
+
+        <p>
+            <strong>Applied On:</strong>
+            <span th:text="${#temporals.format(app.appliedDate,'dd MMM yyyy')}"></span>
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+
+            <span class="badge bg-warning"
+                  th:if="${app.status == null || app.status == 'PENDING'}">
+                Pending
+            </span>
+
+            <span class="badge bg-success"
+                  th:if="${app.status == 'ACCEPTED'}">
+                Accepted
+            </span>
+
+            <span class="badge bg-danger"
+                  th:if="${app.status == 'REJECTED'}">
+                Rejected
+            </span>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

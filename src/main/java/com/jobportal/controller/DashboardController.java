@@ -42,6 +42,21 @@ public class DashboardController {
         return "user-dashboard";
     }
 
+    @GetMapping("/user/applications")
+    public String userApplications(
+            Model model,
+            Principal principal) {
+
+        String email = principal.getName();
+
+        List<Application> applications =
+                applicationRepository.findByUserEmail(email);
+
+        model.addAttribute("applications", applications);
+
+        return "user-applications";
+    }
+
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication auth) {

@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class ApplicationController {
@@ -111,6 +114,20 @@ public class ApplicationController {
         applicationRepository.save(app);
 
         return "redirect:/recruiter/applicants/" + app.getJob().getId();
+    }
+
+    @GetMapping("/user/applications")
+    public String myApplications(Model model,
+                                 Principal principal) {
+
+        String email = principal.getName();
+
+        List<Application> applications =
+                applicationService.getApplicationsByUser(email);
+
+        model.addAttribute("applications", applications);
+
+        return "my-applications";
     }
 
 

@@ -100,6 +100,11 @@ public class ApplicationService {
         return applicationRepository.findByJobId(jobId);
     }
 
+    public List<Application> getApplicationsByUser(String email) {
+
+        return applicationRepository.findByUserEmail(email);
+    }
+
     public void updateStatus(Long id, String status) {
         Application app = applicationRepository.findById(id).orElseThrow();
         app.setStatus(status);

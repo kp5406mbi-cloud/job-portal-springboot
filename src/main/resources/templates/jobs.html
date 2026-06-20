@@ -16,15 +16,21 @@
         <h2 class="text-primary fw-bold">Available Jobs</h2>
 
         <div class="d-flex align-items-center gap-3">
-            <span class="text-muted">
-                Logged in as <strong th:text="${username}"></strong>
-            </span>
+        <span class="text-muted">
+            Logged in as <strong th:text="${username}"></strong>
+        </span>
 
             <a href="/logout" class="btn btn-outline-danger btn-sm">
                 Logout
             </a>
         </div>
     </div>
+
+    <a href="/user/applications"
+       class="btn btn-primary mb-4">
+        My Applications
+    </a>
+</div>
 
 <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
