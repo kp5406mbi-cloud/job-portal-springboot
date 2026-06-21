@@ -19,9 +19,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     List<Application> findByUserEmail(String userEmail);
 
-    List<Application> findByJob(Job job);
-
-    List<Application> findByJobId(Long jobId);
+    List<Application>
+    findByJobIdOrderByAtsScoreDesc(
+            Long jobId);
 
     @Query("SELECT j.title FROM Application a JOIN a.job j WHERE a.userEmail = :email")
     List<String> findJobTitlesByUserEmail(@Param("email") String email);

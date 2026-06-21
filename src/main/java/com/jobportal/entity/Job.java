@@ -9,6 +9,9 @@ import java.util.List;
 @Entity
 public class Job {
 
+    @Column(length = 2000)
+    private String requiredSkills;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_id")
@@ -103,6 +106,22 @@ public class Job {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public String getRequiredSkills() {
+        return requiredSkills;
+    }
+
+    public void setRequiredSkills(String requiredSkills) {
+        this.requiredSkills = requiredSkills;
+    }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
     }
 
     public void addApplication(Application application) {

@@ -17,6 +17,12 @@ import java.util.List;
 public class ApplicationService {
 
     @Autowired
+    private ATSService atsService;
+
+    @Autowired
+    private ResumeParserService resumeParserService;
+
+    @Autowired
     private S3Service s3Service;
 
     @Autowired
@@ -37,21 +43,39 @@ public class ApplicationService {
             return false;
         }
 
-        System.out.println("Uploading resume to S3...");
+        String resumeText =
+                resumeParserService.extractText(file);
 
-        String fileName = s3Service.uploadFile(file);
+        int atsScore =
+                atsService.calculateScore(
+                        resumeText,
+                        job.getRequiredSkills());
 
-        System.out.println("Uploaded to S3: " + fileName);
+        String missingSkills =
+                atsService.getMissingSkills(
+                        resumeText,
+                        job.getRequiredSkills());
 
+        Application application =
+                new Application();
 
-        // ✅ VERY IMPORTANT PART
-        Application application = new Application();
+        String fileName =
+                s3Service.uploadFile(file);
+
         application.setJob(job);
         application.setUserEmail(userEmail);
-        application.setResumePath(fileName);  // ✅ SAVE FILE NAME
+        application.setResumePath(fileName);
         application.setAppliedDate(LocalDateTime.now());
 
+        application.setAtsScore(atsScore);
+        application.setStatus("PENDING");
+        application.setMissingSkills(
+                missingSkills);
+
         applicationRepository.save(application);
+
+
+
 
         try {
 
@@ -91,7 +115,9 @@ public class ApplicationService {
     }
 
     public List<Application> getApplicationsByJobId(Long jobId) {
-        return applicationRepository.findByJobId(jobId);
+
+        return applicationRepository
+                .findByJobIdOrderByAtsScoreDesc(jobId);
     }
 
     public List<Application> getApplicationsByUser(String email) {

@@ -31,6 +31,36 @@
         <span th:text="${app.userEmail}"></span>
     </p>
 
+    <!-- ATS Score -->
+    <p class="mb-2">
+        <strong>ATS Score:</strong>
+
+        <span class="badge px-3 py-2"
+              th:classappend="
+${app.atsScore != null and app.atsScore >= 80} ? 'bg-success' :
+(${app.atsScore != null and app.atsScore >= 60} ? 'bg-warning text-dark' :
+'bg-danger')">
+
+        <span th:text="${app.atsScore == null ? 'N/A' : app.atsScore + '%'}"></span>
+
+    </span>
+    </p>
+
+    <div th:if="${app.missingSkills != null and !#strings.isEmpty(app.missingSkills)}">
+
+        <p class="mb-2">
+            <strong>Missing Skills:</strong>
+        </p>
+
+        <div class="alert alert-warning p-2">
+
+        <span th:text="${app.missingSkills}">
+        </span>
+
+        </div>
+
+    </div>
+
     <!-- Applied Date -->
     <p class="mb-2">
         <strong>Applied On:</strong>

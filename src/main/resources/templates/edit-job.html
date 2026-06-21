@@ -21,6 +21,23 @@
 
     <input type="text" th:field="*{location}" class="form-control mb-3" placeholder="Location"/>
 
+    <div class="mb-3">
+        <label class="form-label fw-semibold">
+            Required Skills
+        </label>
+
+        <textarea
+                th:field="*{requiredSkills}"
+                class="form-control mb-3"
+                rows="3"
+                placeholder="Java, Spring Boot, Docker, PostgreSQL, AWS">
+    </textarea>
+
+        <small class="text-muted">
+            Enter skills separated by commas.
+        </small>
+    </div>
+
     <textarea th:field="*{description}" class="form-control mb-3" placeholder="Description"></textarea>
 
 

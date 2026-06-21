@@ -9,6 +9,15 @@ import java.time.LocalDateTime;
 @Table(name = "applications")
 public class Application {
 
+    @Column
+    private Integer atsScore;
+
+    @Column(length = 3000)
+    private String missingSkills;
+
+    @Column(length = 5000)
+    private String aiFeedback;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -78,4 +87,27 @@ public class Application {
         this.status = status;
     }
 
+    public Integer getAtsScore() {
+        return atsScore;
+    }
+
+    public void setAtsScore(Integer atsScore) {
+        this.atsScore = atsScore;
+    }
+
+    public String getMissingSkills() {
+        return missingSkills;
+    }
+
+    public void setMissingSkills(String missingSkills) {
+        this.missingSkills = missingSkills;
+    }
+
+    public String getAiFeedback() {
+        return aiFeedback;
+    }
+
+    public void setAiFeedback(String aiFeedback) {
+        this.aiFeedback = aiFeedback;
+    }
 }
