@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import com.jobportal.service.CustomOAuth2UserService;
 
 @Configuration
-public class SecurityConfig{
+public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final UserRepository userRepository;
@@ -32,8 +32,6 @@ public class SecurityConfig{
     }
 
 
-
-
     @Bean
     public AuthenticationProvider authenticationProvider(UserService userService,
                                                          BCryptPasswordEncoder passwordEncoder) {
@@ -45,7 +43,7 @@ public class SecurityConfig{
 
 
     @Bean
-    public  BCryptPasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
 
         return new BCryptPasswordEncoder();
     }
@@ -114,48 +112,35 @@ public class SecurityConfig{
     public AuthenticationSuccessHandler successHandler() {
         return (request, response, authentication) -> {
 
+            String email;
 
-
-
-
-            System.out.println("AUTHORITIES:");
-
-            authentication.getAuthorities()
-                    .forEach(a -> System.out.println(a.getAuthority()));
-
-            String email = null;
-
-            if(authentication.getPrincipal() instanceof OAuth2User oauthUser){
+            if (authentication.getPrincipal() instanceof OAuth2User oauthUser) {
                 email = oauthUser.getAttribute("email");
+            } else {
+                email = authentication.getName(); // form login
             }
 
-            if(email != null){
+            Users user = userRepository.findByEmail(email).orElse(null);
 
-                Users user =
-                        userRepository.findByEmail(email).orElse(null);
-
-                if(user != null &&
-                        "PENDING".equals(user.getRole())) {
-
-                    response.sendRedirect("/choose-role");
-                    return;
-                }
-
-                System.out.println("DB ROLE = " + user.getRole());
-
-                if(user != null &&
-                        "RECRUITER".equals(user.getRole())) {
-
-                    response.sendRedirect("/recruiter/dashboard");
-                    return;
-                }
+            if (user == null) {
+                response.sendRedirect("/login");
+                return;
             }
 
-            response.sendRedirect("/user/jobs");
+            System.out.println("Logged in: " + email);
+            System.out.println("DB Role: " + user.getRole());
+
+            if ("PENDING".equals(user.getRole())) {
+                response.sendRedirect("/choose-role");
+            } else if ("RECRUITER".equals(user.getRole())) {
+                response.sendRedirect("/recruiter/dashboard");
+            } else {
+                response.sendRedirect("/user/jobs");
+            }
         };
     }
-
 }
+
 
 /*package com.jobportal.config;
 

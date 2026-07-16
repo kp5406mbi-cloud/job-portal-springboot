@@ -41,7 +41,7 @@ ${app.atsScore != null and app.atsScore >= 80} ? 'bg-success' :
 (${app.atsScore != null and app.atsScore >= 60} ? 'bg-warning text-dark' :
 'bg-danger')">
 
-        <span th:text="${app.atsScore == null ? 'N/A' : app.atsScore + '%'}"></span>
+        <span th:text="${app.atsScore != null ? app.atsScore + '%' : 'N/A'}"></span>
 
     </span>
     </p>
