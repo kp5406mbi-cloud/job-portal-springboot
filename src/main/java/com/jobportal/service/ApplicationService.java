@@ -79,6 +79,8 @@ public class ApplicationService {
 
         try {
 
+            System.out.println("BEFORE SENDING EMAIL");
+
             emailService.sendEmail(
                     userEmail,
                     "Application Submitted Successfully",
@@ -90,6 +92,8 @@ public class ApplicationService {
                             "Status: PENDING\n\n" +
                             "Thank you for using Job Portal."
             );
+
+            System.out.println("AFTER SENDING EMAIL");
 
         } catch (Exception e) {
 
