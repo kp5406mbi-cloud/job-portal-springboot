@@ -2,6 +2,7 @@ package com.jobportal.controller;
 
 import com.jobportal.entity.Job;
 import com.jobportal.service.ApplicationService;
+import com.jobportal.service.EmailService;
 import com.jobportal.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
+
 
 import java.security.Principal;
 import java.util.List;
@@ -20,6 +22,9 @@ public class JobController {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private EmailService emailService;
 
     // ✅ View recruiter jobs
     @GetMapping("/jobs")
@@ -73,11 +78,9 @@ public class JobController {
         return "post-job";
     }
 
-    // ✅ Save job
     @PostMapping("/post")
     public String saveJob(@ModelAttribute Job job, Principal principal) {
 
-        // FIXED ORDER ✅
         String email;
 
         if (principal instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
@@ -89,7 +92,26 @@ public class JobController {
         job.setRecruiterEmail(email);
         jobService.saveJob(job);
 
-        System.out.println("Saved job for: " + job.getRecruiterEmail());
+        System.out.println("Saved job for: " + email);
+
+        try {
+
+            System.out.println("About to send recruiter email...");
+
+            emailService.sendEmail(
+                    email,
+                    "Job Posted Successfully",
+                    "Your job '" + job.getTitle() +
+                            "' has been posted successfully on Job Portal."
+            );
+
+            System.out.println("Recruiter email sent.");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            System.out.println("FAILED TO SEND RECRUITER EMAIL");
+        }
 
         return "redirect:/recruiter/jobs";
     }
@@ -99,7 +121,6 @@ public class JobController {
         jobService.deleteJob(id);
         return "redirect:/recruiter/jobs";
     }
-
     @GetMapping("/edit/{id}")
     public String editJobForm(@PathVariable Long id, Model model) {
 
