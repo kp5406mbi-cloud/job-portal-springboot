@@ -94,25 +94,28 @@ public class JobServiceImpl implements JobService {
         applicationRepository.save(application);
     }
 
-
     @Override
-    public Page<Job> getAllJobs(Pageable pageable, int page){
+    public Page<Job> getAllJobs(Pageable pageable, int page) {
+
+        System.out.println("===== NEW BUILD =====");
 
         Page<Job> pageResult = jobRepository.findAll(pageable);
 
-        if (page >= pageResult.getTotalPages() && pageResult.getTotalPages() > 0) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Page number out of range"
+        System.out.println("Jobs found = " + pageResult.getTotalElements());
+
+        for (Job job : pageResult.getContent()) {
+            System.out.println(
+                    job.getId() + " | " +
+                            job.getTitle() + " | " +
+                            job.getCompany()
             );
         }
 
         return pageResult;
-
-
-
-
     }
+
+
+
 
     @Override
     public List<Job> getAllJobs() {
