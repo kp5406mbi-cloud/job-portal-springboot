@@ -32,10 +32,21 @@ public class UserJobController {
     public String userJobs(Model model, Authentication auth, Principal principal) {
 
         int page = 0;
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 50);
 
         Page<Job> jobPage = jobService.getAllJobs(pageable, page);
         List<Job> jobs = jobPage.getContent();
+
+        System.out.println("Jobs displayed = " + jobs.size());
+
+        for (Job job : jobs) {
+            System.out.println(
+                    job.getId() + " | " +
+                            job.getTitle() + " | " +
+                            job.getCompany()
+            );
+        }
+
         model.addAttribute("jobs", jobs);
 
         String username;
