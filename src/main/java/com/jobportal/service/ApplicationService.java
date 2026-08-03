@@ -79,7 +79,7 @@ public class ApplicationService {
 
         try {
 
-            emailService.sendMail(
+            emailService.sendEmail(
                     userEmail,
                     "Application Submitted Successfully",
                     "Your application for the position '" +
@@ -137,7 +137,7 @@ public class ApplicationService {
 
             try {
 
-                emailService.sendMail(
+                emailService.sendEmail(
                         app.getUserEmail(),
                         "Application Accepted",
                         "Congratulations!\n\n" +
@@ -155,7 +155,7 @@ public class ApplicationService {
 
             try {
 
-                emailService.sendMail(
+                emailService.sendEmail(
                         app.getUserEmail(),
                         "Application Rejected",
                         "Thank you for applying.\n\n" +
