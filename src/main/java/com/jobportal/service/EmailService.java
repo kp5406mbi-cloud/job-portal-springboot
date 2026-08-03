@@ -20,6 +20,8 @@ public class EmailService {
     public void init() {
         System.out.println("========== MAIL CONFIG ==========");
         System.out.println("MAIL USER = " + sender);
+        System.out.println("MAIL HOST = " + host);
+        System.out.println("MAIL PORT = " + port);
         System.out.println("=================================");
     }
 
@@ -43,4 +45,12 @@ public class EmailService {
         System.out.println("EMAIL SENT SUCCESSFULLY");
         System.out.println("==================================");
     }
+
+    @Value("${spring.mail.host}")
+    private String host;
+
+    @Value("${spring.mail.port}")
+    private String port;
+
+
 }
