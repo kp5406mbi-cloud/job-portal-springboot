@@ -16,6 +16,13 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
+    @PostConstruct
+    public void init() {
+        System.out.println("========== MAIL CONFIG ==========");
+        System.out.println("MAIL USER = " + sender);
+        System.out.println("=================================");
+    }
+
     public void sendEmail(String to, String subject, String body) {
 
         System.out.println("========== EMAIL SERVICE ==========");
@@ -29,14 +36,11 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(body);
 
+        System.out.println("Calling mailSender.send()...");
+
         mailSender.send(message);
 
         System.out.println("EMAIL SENT SUCCESSFULLY");
         System.out.println("==================================");
-    }
-
-    @PostConstruct
-    public void checkMailConfig() {
-        System.out.println("MAIL USER = " + sender);
     }
 }
