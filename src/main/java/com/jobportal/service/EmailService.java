@@ -1,5 +1,6 @@
 package com.jobportal.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -32,5 +33,10 @@ public class EmailService {
 
         System.out.println("EMAIL SENT SUCCESSFULLY");
         System.out.println("==================================");
+    }
+
+    @PostConstruct
+    public void checkMailConfig() {
+        System.out.println("MAIL USER = " + sender);
     }
 }
