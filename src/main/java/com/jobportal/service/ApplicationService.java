@@ -97,8 +97,11 @@ public class ApplicationService {
 
         } catch (Exception e) {
 
+            System.out.println("========= EMAIL ERROR =========");
+            System.out.println(e.getClass().getName());
+            System.out.println(e.getMessage());
             e.printStackTrace();
-            System.out.println("MAIL FAILED BUT APPLICATION SAVED");
+            System.out.println("===============================");
         }
 
         return true;
