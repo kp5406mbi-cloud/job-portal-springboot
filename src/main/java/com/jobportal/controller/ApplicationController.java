@@ -92,11 +92,10 @@ public class ApplicationController {
     @PostMapping("/recruiter/application/{id}/accept")
     public String acceptApplication(@PathVariable Long id) {
 
+        applicationService.updateStatus(id, "ACCEPTED");
+
         Application app = applicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
-
-        app.setStatus("ACCEPTED");
-        applicationRepository.save(app);
 
         return "redirect:/recruiter/applicants/" + app.getJob().getId();
     }
@@ -104,11 +103,10 @@ public class ApplicationController {
     @PostMapping("/recruiter/application/{id}/reject")
     public String rejectApplication(@PathVariable Long id) {
 
+        applicationService.updateStatus(id, "REJECTED");
+
         Application app = applicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
-
-        app.setStatus("REJECTED");
-        applicationRepository.save(app);
 
         return "redirect:/recruiter/applicants/" + app.getJob().getId();
     }
