@@ -156,11 +156,25 @@ public class ApplicationService {
 
                 emailService.sendEmail(
                         app.getUserEmail(),
-                        "Application Accepted",
-                        "Congratulations!\n\n" +
-                                "Your application for '" +
-                                jobTitle +
-                                "' has been accepted."
+                        "Application Status Updated - Accepted",
+                        "Dear Candidate,\n\n" +
+
+                                "Congratulations! We are pleased to inform you that your application has been accepted.\n\n" +
+
+                                "Application Details:\n" +
+                                "----------------------------------------\n" +
+                                "Job Title : " + jobTitle + "\n" +
+                                "Status    : ACCEPTED\n" +
+                                "----------------------------------------\n\n" +
+
+                                "Our recruitment team will contact you soon with the next steps in the hiring process.\n\n" +
+
+                                "You can also log in to your Job Portal account to view your application status.\n\n" +
+
+                                "Thank you for using Job Portal.\n\n" +
+
+                                "Best Regards,\n" +
+                                "Job Portal Team"
                 );
 
                 System.out.println("Acceptance email sent.");
@@ -182,13 +196,26 @@ public class ApplicationService {
 
                 emailService.sendEmail(
                         app.getUserEmail(),
-                        "Application Rejected",
-                        "Thank you for applying.\n\n" +
-                                "Your application for '" +
-                                jobTitle +
-                                "' was not selected at this time."
-                );
+                        "Application Status Updated",
+                        "Dear Candidate,\n\n" +
 
+                                "Thank you for your interest in the position and for taking the time to apply.\n\n" +
+
+                                "Application Details:\n" +
+                                "----------------------------------------\n" +
+                                "Job Title : " + jobTitle + "\n" +
+                                "Status    : REJECTED\n" +
+                                "----------------------------------------\n\n" +
+
+                                "After careful review, we have decided to move forward with other candidates whose qualifications more closely match the current requirements.\n\n" +
+
+                                "We encourage you to continue exploring other opportunities on Job Portal and wish you every success in your future career.\n\n" +
+
+                                "Thank you for using Job Portal.\n\n" +
+
+                                "Best Regards,\n" +
+                                "Job Portal Team"
+                );
                 System.out.println("Rejection email sent.");
 
             } catch (Exception e) {
