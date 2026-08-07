@@ -75,8 +75,6 @@ public class ApplicationService {
         applicationRepository.save(application);
 
 
-
-
         try {
 
             System.out.println("BEFORE SENDING EMAIL");
@@ -133,16 +131,28 @@ public class ApplicationService {
     }
 
     public void updateStatus(Long id, String status) {
-        Application app = applicationRepository.findById(id).orElseThrow();
+
+        System.out.println("========== UPDATE STATUS ==========");
+        System.out.println("Application ID: " + id);
+        System.out.println("Status: " + status);
+
+        Application app = applicationRepository.findById(id)
+                .orElseThrow();
+
+        System.out.println("Applicant Email: " + app.getUserEmail());
+
         app.setStatus(status);
         applicationRepository.save(app);
 
-        String jobTitle =
-                app.getJob().getTitle();
+        String jobTitle = app.getJob().getTitle();
 
         if ("ACCEPTED".equalsIgnoreCase(status)) {
 
+            System.out.println("Inside ACCEPTED block");
+
             try {
+
+                System.out.println("Sending acceptance email...");
 
                 emailService.sendEmail(
                         app.getUserEmail(),
@@ -153,14 +163,22 @@ public class ApplicationService {
                                 "' has been accepted."
                 );
 
+                System.out.println("Acceptance email sent.");
+
             } catch (Exception e) {
+
+                System.out.println("========= ACCEPT EMAIL ERROR =========");
                 e.printStackTrace();
             }
         }
 
         if ("REJECTED".equalsIgnoreCase(status)) {
 
+            System.out.println("Inside REJECTED block");
+
             try {
+
+                System.out.println("Sending rejection email...");
 
                 emailService.sendEmail(
                         app.getUserEmail(),
@@ -171,14 +189,17 @@ public class ApplicationService {
                                 "' was not selected at this time."
                 );
 
+                System.out.println("Rejection email sent.");
+
             } catch (Exception e) {
+
+                System.out.println("========= REJECT EMAIL ERROR =========");
                 e.printStackTrace();
             }
-
-           
         }
     }
 }
+
 
 /*@Service
 public class ApplicationService {
