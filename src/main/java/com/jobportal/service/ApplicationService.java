@@ -102,6 +102,71 @@ public class ApplicationService {
             System.out.println("===============================");
         }
 
+        try {
+
+            System.out.println("========== RECRUITER EMAIL ==========");
+
+            String recruiterEmail = job.getRecruiterEmail();
+
+            String recruiterSubject =
+                    "New Application Received - " + job.getTitle();
+
+            String recruiterBody =
+                    "Dear Recruiter,\n\n" +
+
+                            "A new candidate has applied for one of your job postings.\n\n" +
+
+                            "Application Details\n" +
+                            "--------------------------------------------------\n" +
+
+                            "Job Title        : " + job.getTitle() + "\n" +
+                            "Company          : " + job.getCompany() + "\n" +
+                            "Applicant Email  : " + userEmail + "\n" +
+                            "Application Date : " + application.getAppliedDate() + "\n" +
+                            "Application Status : " + application.getStatus() + "\n" +
+                            "ATS Score        : " + atsScore + "%\n";
+
+            if (!missingSkills.isBlank()) {
+
+                recruiterBody +=
+                        "Missing Skills   : " +
+                                missingSkills +
+                                "\n";
+            }
+
+            recruiterBody +=
+                    "Resume File      : " +
+                            application.getResumePath() +
+                            "\n";
+
+            recruiterBody +=
+                    "--------------------------------------------------\n\n";
+
+            recruiterBody +=
+                    "Please log in to Job Portal to review the application and download the candidate's resume.\n\n";
+
+            recruiterBody +=
+                    "Best Regards,\n";
+            recruiterBody +=
+                    "Job Portal Team";
+
+            emailService.sendEmail(
+                    recruiterEmail,
+                    recruiterSubject,
+                    recruiterBody
+            );
+
+            System.out.println("Recruiter notification sent.");
+
+        } catch (Exception e) {
+
+            System.out.println("========= RECRUITER EMAIL ERROR =========");
+
+            e.printStackTrace();
+
+            System.out.println("=========================================");
+        }
+
         return true;
 
     }
