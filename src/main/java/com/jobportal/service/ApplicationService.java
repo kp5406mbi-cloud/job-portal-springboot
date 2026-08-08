@@ -7,6 +7,7 @@ import com.jobportal.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.jobportal.util.EmailTemplates;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,67 +105,40 @@ public class ApplicationService {
 
         try {
 
-            System.out.println("========== RECRUITER EMAIL ==========");
+            System.out.println("========== RECRUITER HTML EMAIL ==========");
 
             String recruiterEmail = job.getRecruiterEmail();
 
             String recruiterSubject =
                     "New Application Received - " + job.getTitle();
 
-            String recruiterBody =
-                    "Dear Recruiter,\n\n" +
+            String recruiterHtml =
+                    EmailTemplates.recruiterNotification(
+                            job.getTitle(),
+                            job.getCompany(),
+                            userEmail,
+                            application.getAppliedDate().toString(),
+                            application.getStatus(),
+                            atsScore,
+                            missingSkills,
+                            application.getResumePath()
+                    );
 
-                            "A new candidate has applied for one of your job postings.\n\n" +
-
-                            "Application Details\n" +
-                            "--------------------------------------------------\n" +
-
-                            "Job Title        : " + job.getTitle() + "\n" +
-                            "Company          : " + job.getCompany() + "\n" +
-                            "Applicant Email  : " + userEmail + "\n" +
-                            "Application Date : " + application.getAppliedDate() + "\n" +
-                            "Application Status : " + application.getStatus() + "\n" +
-                            "ATS Score        : " + atsScore + "%\n";
-
-            if (!missingSkills.isBlank()) {
-
-                recruiterBody +=
-                        "Missing Skills   : " +
-                                missingSkills +
-                                "\n";
-            }
-
-            recruiterBody +=
-                    "Resume File      : " +
-                            application.getResumePath() +
-                            "\n";
-
-            recruiterBody +=
-                    "--------------------------------------------------\n\n";
-
-            recruiterBody +=
-                    "Please log in to Job Portal to review the application and download the candidate's resume.\n\n";
-
-            recruiterBody +=
-                    "Best Regards,\n";
-            recruiterBody +=
-                    "Job Portal Team";
-
-            emailService.sendEmail(
+            emailService.sendHtmlEmail(
                     recruiterEmail,
                     recruiterSubject,
-                    recruiterBody
+                    recruiterHtml
             );
 
-            System.out.println("Recruiter notification sent.");
+            System.out.println("Recruiter HTML notification sent.");
 
         } catch (Exception e) {
 
-            System.out.println("========= RECRUITER EMAIL ERROR =========");
+            System.out.println("========= RECRUITER HTML EMAIL ERROR =========");
 
             e.printStackTrace();
 
-            System.out.println("=========================================");
+            System.out.println("==============================================");
         }
 
         return true;
