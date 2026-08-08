@@ -321,4 +321,27 @@ public class EmailTemplates {
         );
     }
 
+    public static String newJobPosted(
+            String jobTitle,
+            String company,
+            String location
+    ) {
+
+        String details =
+                "<b>Job Title:</b> " + jobTitle +
+                        "<br>" +
+                        "<b>Company:</b> " + company +
+                        "<br>" +
+                        "<b>Location:</b> " + location;
+
+        return layout(
+                "Job Posted Successfully",
+                "Your job has been successfully posted on Job Portal.",
+                details,
+                "Open Recruiter Portal",
+                BASE_URL + "/recruiter/dashboard",
+                "#2563EB"
+        );
+    }
+
 }

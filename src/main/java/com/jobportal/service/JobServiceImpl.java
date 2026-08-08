@@ -8,11 +8,12 @@ import com.jobportal.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
+import org.springframework.stereotype.Service;
+import com.jobportal.util.EmailTemplates;
+
+
+
 import java.util.List;
 
 @Service
@@ -24,11 +25,52 @@ public class JobServiceImpl implements JobService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     // CRUD
 
     @Override
     public Job saveJob(Job job) {
-        return jobRepository.save(job);
+
+        // First save the job
+        Job savedJob = jobRepository.save(job);
+
+        try {
+
+            System.out.println("========== JOB POSTED HTML EMAIL ==========");
+
+            String recruiterEmail = savedJob.getRecruiterEmail();
+
+            String jobPostedHtml =
+                    EmailTemplates.newJobPosted(
+                            savedJob.getTitle(),
+                            savedJob.getCompany(),
+                            savedJob.getLocation()
+                    );
+
+            emailService.sendHtmlEmail(
+                    recruiterEmail,
+                    "Job Posted Successfully",
+                    jobPostedHtml
+            );
+
+            System.out.println("Job posted HTML notification sent.");
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "========= JOB POSTED HTML EMAIL ERROR ========="
+            );
+
+            e.printStackTrace();
+
+            System.out.println(
+                    "==============================================="
+            );
+        }
+
+        return savedJob;
     }
 
     @Override
