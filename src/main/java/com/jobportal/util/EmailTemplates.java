@@ -286,4 +286,39 @@ public class EmailTemplates {
         );
     }
 
+    public static String applicationAccepted(String jobTitle) {
+
+        String details =
+                "<b>Job Title:</b> " + jobTitle +
+                        "<br>" +
+                        "<b>Application Status:</b> ACCEPTED";
+
+        return layout(
+                "Congratulations!",
+                "We are pleased to inform you that your application has been accepted.",
+                details,
+                "View My Applications",
+                BASE_URL + "/user/applications",
+                "#22C55E"
+        );
+    }
+
+
+    public static String applicationRejected(String jobTitle) {
+
+        String details =
+                "<b>Job Title:</b> " + jobTitle +
+                        "<br>" +
+                        "<b>Application Status:</b> REJECTED";
+
+        return layout(
+                "Application Update",
+                "Thank you for your interest. After careful review, we have decided to move forward with other candidates.",
+                details,
+                "Browse Jobs",
+                BASE_URL + "/user/jobs",
+                "#EF4444"
+        );
+    }
+
 }
