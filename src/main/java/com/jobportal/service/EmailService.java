@@ -58,4 +58,48 @@ public class EmailService {
         System.out.println("EMAIL SENT SUCCESSFULLY");
         System.out.println("===============================");
     }
+
+    public void sendHtmlEmail(
+            String to,
+            String subject,
+            String html
+    ) {
+
+        System.out.println("========== BREVO HTML EMAIL ==========");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", apiKey);
+
+        Map<String, Object> request = Map.of(
+
+                "sender",
+                Map.of(
+                        "email", sender,
+                        "name", "Job Portal"
+                ),
+
+                "to",
+                List.of(
+                        Map.of("email", to)
+                ),
+
+                "subject",
+                subject,
+
+                "htmlContent",
+                html
+        );
+
+        HttpEntity<Map<String, Object>> entity =
+                new HttpEntity<>(request, headers);
+
+        restTemplate.postForEntity(
+                "https://api.brevo.com/v3/smtp/email",
+                entity,
+                String.class
+        );
+
+        System.out.println("HTML EMAIL SENT SUCCESSFULLY");
+    }
 }
