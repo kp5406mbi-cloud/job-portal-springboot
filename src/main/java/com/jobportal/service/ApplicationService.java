@@ -75,33 +75,33 @@ public class ApplicationService {
 
         applicationRepository.save(application);
 
-
         try {
 
-            System.out.println("BEFORE SENDING EMAIL");
+            System.out.println("========== CANDIDATE HTML EMAIL ==========");
 
-            emailService.sendEmail(
+            String candidateHtml =
+                    EmailTemplates.applicationSubmitted(
+                            job.getTitle(),
+                            job.getCompany()
+                    );
+
+            emailService.sendHtmlEmail(
                     userEmail,
                     "Application Submitted Successfully",
-                    "Your application for the position '" +
-                            job.getTitle() +
-                            "' at " +
-                            job.getCompany() +
-                            " has been submitted successfully.\n\n" +
-                            "Status: PENDING\n\n" +
-                            "Thank you for using Job Portal."
+                    candidateHtml
             );
 
-            System.out.println("AFTER SENDING EMAIL");
+            System.out.println("Candidate HTML notification sent.");
 
         } catch (Exception e) {
 
-            System.out.println("========= EMAIL ERROR =========");
-            System.out.println(e.getClass().getName());
-            System.out.println(e.getMessage());
+            System.out.println("========= CANDIDATE HTML EMAIL ERROR =========");
+
             e.printStackTrace();
-            System.out.println("===============================");
+
+            System.out.println("==============================================");
         }
+
 
         try {
 

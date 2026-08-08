@@ -258,4 +258,32 @@ public class EmailTemplates {
                 "#2563EB"
         );
     }
+
+    public static String applicationSubmitted(
+            String jobTitle,
+            String company
+    ) {
+
+        String details =
+                "<b>Job Title:</b> " + jobTitle +
+                        "<br>" +
+                        "<b>Company:</b> " + company +
+                        "<br>" +
+                        "<b>Application Status:</b> PENDING";
+
+        return layout(
+                "Application Submitted Successfully",
+
+                "Your application has been submitted successfully.",
+
+                details,
+
+                "View My Applications",
+
+                BASE_URL + "/user/applications",
+
+                "#2563EB"
+        );
+    }
+
 }
