@@ -11,11 +11,11 @@ A scalable backend system built using **Spring Boot** and **PostgreSQL** to supp
 
 ## 🌐 Live Demo
 
-👉 https://job-portal-springboot-1.onrender.com
+👉 https://jobportal-app.duckdns.org
 
-> ⚠️ Note: The application is hosted on Render free tier and may take ~30–60 seconds to load after inactivity due to cold start.
 
----
+
+
 
 ## 📂 GitHub Repository
 
